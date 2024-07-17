@@ -42,21 +42,13 @@ public class Instance
     {
         M1 = new ArrayList<>(M); // Create M1 as a copy of M
         int counter=0;
-        for (int j=0;j<N.get(0).size();j++) // Iterate through each column
+
+        for (int i=0;i<N.size(); i++)
         {
-            boolean emptyColumn= true;
-            for(int i=0;i<N.size(); i++)
+            if(!N.get(i).contains(1))
             {
-                if(N.get(i).get(j)==1)
-                {
-                    emptyColumn = false;
-                    break;
-                }
-            }
-            if(emptyColumn)
-            {
-                emptyColumns.add(j); // Record the index of the empty column
-                M1.remove(j-counter); // Remove the corresponding element from M1, adjusting the index by counter
+                emptyColumns.add(i); // Record the index of the empty column
+                M1.remove(i-counter); // Remove the corresponding element from M1, adjusting the index by counter
                 counter++;
             }
         }
