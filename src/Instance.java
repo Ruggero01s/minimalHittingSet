@@ -10,6 +10,22 @@ public class Instance
 
     private List <Integer> emptyColumns = new ArrayList<>(); //list of columns removed from M
 
+    public List<String> getM() {
+        return M;
+    }
+
+    public List<String> getM1() {
+        return M1;
+    }
+
+    public List<List<Integer>> getN() {
+        return N;
+    }
+
+    public List<Integer> getEmptyColumns() {
+        return emptyColumns;
+    }
+
     public Instance(List<String> m, List<List<Integer>> n) {
         M = new ArrayList<>(m);
         N = new ArrayList<>(n);

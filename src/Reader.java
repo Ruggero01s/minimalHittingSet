@@ -30,7 +30,35 @@ public class Reader {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        N = invertMatrix(N);
+
         return new Instance(M,N);
+    }
+
+    public static List<List<Integer>> invertMatrix(List<List<Integer>> matrix) {
+        if (matrix == null || matrix.isEmpty()) {
+            throw new IllegalArgumentException("Matrix cannot be null or empty");
+        }
+
+        int numRows = matrix.size();
+        int numCols = matrix.get(0).size();
+
+        List<List<Integer>> invertedMatrix = new ArrayList<>();
+
+        // Initialize the inverted matrix with empty lists
+        for (int col = 0; col < numCols; col++) {
+            invertedMatrix.add(new ArrayList<>());
+        }
+
+        // Fill the inverted matrix
+        for (int row = 0; row < numRows; row++) {
+            for (int col = 0; col < numCols; col++) {
+                invertedMatrix.get(col).add(matrix.get(row).get(col));
+            }
+        }
+
+        return invertedMatrix;
     }
 
     private List<Integer> createRow(String line) throws IOException {
