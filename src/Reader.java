@@ -36,7 +36,7 @@ public class Reader {
         return new Instance(M,N);
     }
 
-    public static List<List<Integer>> invertMatrix(List<List<Integer>> matrix) {
+    public List<List<Integer>> invertMatrix(List<List<Integer>> matrix) {
         if (matrix == null || matrix.isEmpty()) {
             throw new IllegalArgumentException("Matrix cannot be null or empty");
         }
@@ -79,7 +79,7 @@ public class Reader {
         throw new IOException();
     }
 
-    private static List<String> parseMapLine(String line) {
+    private List<String> parseMapLine(String line) {
         // Crea una lista con una dimensione iniziale basata sul numero massimo trovato negli indici
         List<String> resultList = new ArrayList<>();
 

@@ -4,21 +4,24 @@ public class Main {
 
     static Hypothesis h0;
     static Instance instance;
+    static String basePath = "benchmarks/benchmarks1/";
+    static String fileName = "74L85.016.matrix";
 
     public static void main(String[] args) {
         Reader r = new Reader();
-        instance = r.readInstance("benchmarks/benchmarks1/74L85.000.matrix");
+        Writer w = new Writer();
+        instance = r.readInstance(basePath + fileName);
 
-        List<Hypothesis> result = calculateMHS();
+        instance.setSolutions(calculateMHS());
 
 
-        //writeOut(i, result);
+        w.writeOut(fileName, instance);
 
         System.out.println(instance);
     }
 
-    private static List<Hypothesis> calculateMHS() {
-        h0 = new Hypothesis(new ArrayList<>(Collections.nCopies(instance.getM().size(), 0)));
+     private static List<Hypothesis> calculateMHS() {
+        h0 = new Hypothesis(new ArrayList<>(Collections.nCopies(instance.getM1().size(), 0)));
         setFields(h0);
         List<Hypothesis> current = new ArrayList<>(List.of(h0));
         List<Hypothesis> solutions = new ArrayList<>();
@@ -29,11 +32,12 @@ public class Main {
                 if (h.isSolution()) {
                     solutions.add(h);
                     current.remove(h);
+                    i--;
                 } else if (h.isNullSolution()) {
                     next.addAll(generateChildren(current, h));
                 } else if (h.getBinaryRep().getFirst() != 1) {
                     Hypothesis h2 = globalInitial(h);
-                    removeAllBiggerHypothesis(current, h2);
+                    current = removeAllBiggerHypothesis(current, h2);
                     Hypothesis hp = current.getFirst();
                     if (!hp.equals(h))
                         next = new ArrayList<>(merge(next, generateChildren(current, h)));
@@ -46,9 +50,10 @@ public class Main {
     }
 
     private static List<Hypothesis> generateChildren(List<Hypothesis> current, Hypothesis h) {
+        List<Hypothesis> copyCurrent = new ArrayList<>(current);
         List<Hypothesis> children = new ArrayList<>();
         if (h.isNullSolution()) {
-            for (int i = 0; i < instance.getM().size(); i++) {
+            for (int i = 0; i < instance.getM1().size(); i++) {
                 Hypothesis h1 = new Hypothesis(h);
                 h1.getBinaryRep().set(i, 1);
                 setFields(h1);
@@ -56,7 +61,7 @@ public class Main {
             }
             return children;
         } else {
-            Hypothesis hp = current.getFirst();
+            Hypothesis hp = copyCurrent.getFirst();
             for (int i = 0; i < h.getBinaryRep().indexOf(1); i++) {
                 Hypothesis h1 = new Hypothesis(h);
                 h1.getBinaryRep().set(i, 1);
@@ -70,7 +75,7 @@ public class Main {
                         propagate(hp, h1);
                         counter++;
                     }
-                    hp = current.get(current.indexOf(hp)+1);
+                    hp = copyCurrent.get(copyCurrent.indexOf(hp) + 1);
                 }
                 if (counter == h.cardinality())
                     children.add(h1);
@@ -97,24 +102,26 @@ public class Main {
         merged.addAll(hlList2);
         Comparator<Hypothesis> hypothesisComparator = Main::isGreater;
         merged.sort(hypothesisComparator);
-        return merged;
+        return merged.reversed();
     }
 
     private static int isGreater(Hypothesis h1, Hypothesis h2) {
-        if (h1.equals(h2))
+        if (h1.getBinaryRep().equals(h2.getBinaryRep()))
             return 0;
         return h1.isGreater(h2) ? 1 : -1;
     }
 
 
     private static void removeAllBiggerHypothesis(List<Hypothesis> current, Hypothesis h2) {
-        for (int i = 0; i < current.size(); i++) {
-            if (current.get(i).isGreater(h2))
-            {
-                current.remove(i);
-                i--;
+        List<Hypothesis> toRemove = new ArrayList<>();
+
+        for (Hypothesis hypothesis : current)
+        {
+            if (hypothesis.isGreater(h2)) {
+                toRemove.add(hypothesis);
             }
         }
+        current.removeAll(toRemove);
     }
 
     private static Hypothesis globalInitial(Hypothesis h) {
@@ -129,9 +136,9 @@ public class Main {
 
     private static void setFields(Hypothesis h) {
         if (h.isImmediateSuccessorOf(h0))
-            h.setHitVector(instance.getN().get(h.getBinaryRep().indexOf(1))); //matrix column relevant to singleton h
+            h.setHitVector(instance.getN1().get(h.getBinaryRep().indexOf(1))); //matrix column relevant to singleton h
         else
-            h.setHitVector(new ArrayList<>(Collections.nCopies(instance.getN().getFirst().size(), 0)));
+            h.setHitVector(new ArrayList<>(Collections.nCopies(instance.getN1().getFirst().size(), 0)));
 
     }
 
