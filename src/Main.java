@@ -49,6 +49,34 @@ public class Main {
         return solutions;
     }
 
+   /* private static List<Hypothesis> calculateMHS() {
+        h0 = new Hypothesis(new ArrayList<>(Collections.nCopies(instance.getM1().size(), 0)));
+        setFields(h0);
+        List<Hypothesis> current = new ArrayList<>(List.of(h0));
+        List<Hypothesis> solutions = new ArrayList<>();
+        while (!current.isEmpty()) {
+            List<Hypothesis> next = new ArrayList<>();
+            Iterator<Hypothesis> iterator = current.iterator();
+            while (iterator.hasNext()) {
+                Hypothesis h = iterator.next();
+                if (h.isSolution()) {
+                    solutions.add(h);
+                    iterator.remove();
+                } else if (h.isNullSolution()) {
+                    next.addAll(generateChildren(current, h));
+                } else if (h.getBinaryRep().getFirst() != 1) { // Updated to get first element correctly
+                    Hypothesis h2 = globalInitial(h);
+                    removeAllBiggerHypothesis(current, h2);
+                    if (!current.isEmpty() && !current.getFirst().equals(h)) {
+                        next = new ArrayList<>(merge(next, generateChildren(current, h)));
+                    }
+                }
+            }
+            current = new ArrayList<>(next);
+        }
+        return solutions;
+    }*/
+
     private static List<Hypothesis> generateChildren(List<Hypothesis> current, Hypothesis h) {
         List<Hypothesis> copyCurrent = new ArrayList<>(current);
         List<Hypothesis> children = new ArrayList<>();

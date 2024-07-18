@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -62,16 +63,50 @@ public class Instance
     private void calculateM1 ()
     {
         M1 = new ArrayList<>(M); // Create M1 as a copy of M
-        int counter=0;
+        List<String> elementsToRemove = new ArrayList<>();
 
         for (int i=0;i<N.size(); i++)
         {
             if(!N.get(i).contains(1))
             {
                 emptyColumns.add(i); // Record the index of the empty column
-                M1.remove(i-counter); // Remove the corresponding element from M1, adjusting the index by counter
-                counter++;
+                elementsToRemove.add(M.get(i));
             }
         }
+        M1.removeAll(elementsToRemove);
+    }
+
+    public String solutionToString()
+    {
+        for (Integer column : emptyColumns)
+            for (Hypothesis solution : solutions)
+                solution.getBinaryRep().add(column,0);
+
+        StringBuilder solutionString = new StringBuilder();
+        for (Hypothesis solution : solutions)
+        {
+            for (Integer element : solution.getBinaryRep())
+            {
+                solutionString.append(element).append(" ");
+            }
+            solutionString.append(" -\n");
+        }
+
+        return solutionString.toString();
+    }
+
+    public String calcMinMaxCard() {
+        int min = Integer.MAX_VALUE;
+        int max = -1;
+        for (Hypothesis solution : solutions) {
+            int card = solution.cardinality();
+            if (card < min){
+                min = card;
+            }
+            if (card > max){
+                max = card;
+            }
+        }
+        return "Min:" + String.valueOf(min) + " Max: " + String.valueOf(max);
     }
 }

@@ -129,5 +129,4 @@ public class Hypothesis
         }
         return card;
     }
-
 }
