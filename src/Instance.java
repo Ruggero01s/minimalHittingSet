@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 
@@ -110,4 +109,15 @@ public class Instance
         }
         return "Min: " + String.valueOf(min) + " Max: " + String.valueOf(max);
     }
+
+    public String emptyColumnsToString()
+    {
+        StringBuilder emptyColumnsString = new StringBuilder();
+        for (int i=0;i<emptyColumns.size();i++)
+        {
+            emptyColumnsString.append(emptyColumns.get(i)+1).append(" ");
+        }
+        return emptyColumnsString.toString();
+    }
+
 }
