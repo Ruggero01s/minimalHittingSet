@@ -11,7 +11,9 @@ public class Reader {
     public List<String> M = new ArrayList<>();
     private List<List<Integer>> N = new ArrayList<>();
 
-    public Instance readInstance(String filePath){
+    public Instance readInstance(String filePath) throws IOException {
+        M = new ArrayList<>();
+        N = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = br.readLine()) != null) {
@@ -32,7 +34,8 @@ public class Reader {
         }
 
         N = invertMatrix(N);
-
+        if (M.size() != N.size())
+            throw new IOException("M e N hanno dimensioni diverse (M: " + M.size() + " N: " + N.size() + ")");
         return new Instance(M,N);
     }
 
@@ -42,7 +45,7 @@ public class Reader {
         }
 
         int numRows = matrix.size();
-        int numCols = matrix.get(0).size();
+        int numCols = matrix.getFirst().size();
 
         List<List<Integer>> invertedMatrix = new ArrayList<>();
 

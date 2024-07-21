@@ -45,6 +45,7 @@ public class Instance
     public Instance(List<String> m, List<List<Integer>> n) {
         M = new ArrayList<>(m);
         N = new ArrayList<>(n);
+
         calculateM1();
         calculateN1();
     }
@@ -107,6 +108,6 @@ public class Instance
                 max = card;
             }
         }
-        return "Min:" + String.valueOf(min) + " Max: " + String.valueOf(max);
+        return "Min: " + String.valueOf(min) + " Max: " + String.valueOf(max);
     }
 }

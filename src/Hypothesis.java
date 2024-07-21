@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Hypothesis
@@ -15,6 +16,7 @@ public class Hypothesis
     public Hypothesis(Hypothesis h)
     {
         this.binaryRep = new ArrayList<>(h.binaryRep);
+        this.hitVector = new ArrayList<>(h.hitVector);
     }
 
     public List<Integer> getBinaryRep() {
@@ -33,9 +35,9 @@ public class Hypothesis
         this.hitVector = hitVector;
     }
 
-    public  boolean isImmediateSuccessorOf(Hypothesis h)
+    public boolean isImmediateSuccessorOf(Hypothesis h)
     {
-        if(this.binaryRep.equals(h.binaryRep))
+        if(this.equals(h))
             return false;
 
         boolean first = true;
@@ -128,5 +130,33 @@ public class Hypothesis
                 card++;
         }
         return card;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Hypothesis that = (Hypothesis) o;
+        return this.binaryRep.equals(that.binaryRep);
+    }
+
+    @Override
+    public int hashCode() {
+        return this.binaryRep.hashCode();
+    }
+
+    public void reCalcHitVector(Instance instance) {
+        ArrayList<Integer> newHitVector = new ArrayList<>(Collections.nCopies(getHitVector().size(), 0));
+        for (int i = 0; i < this.getBinaryRep().size(); i++) {
+            if (this.getBinaryRep().get(i)==1){
+                    for (int k = 0; k < instance.getN1().getFirst().size(); k++) {
+                        if (instance.getN1().get(i).get(k) == 1) {
+                            newHitVector.set(k, 1);
+                        }
+                }
+            }
+        }
+        this.setHitVector(new ArrayList<>(newHitVector));
     }
 }

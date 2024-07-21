@@ -5,26 +5,35 @@ import java.util.List;
 
 public class Writer
 {
-    String resultPath = "results/";
+    private static final String resultPath = "results/";
+    private String fileName;
+    private BufferedWriter writer;
 
-    public void writeOut(String fileName, Instance instance)
-    {
+
+    public Writer(String fileName){
         fileName = fileName.substring(0,fileName.lastIndexOf(".")) + ".mhs";
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(resultPath + fileName)))
-        {
-           writeSummary(writer, instance);
-           writeSolution(writer,instance);
-        }
-        catch (IOException e)
+        try {
+             writer = new BufferedWriter(new FileWriter(resultPath + fileName));
+        }catch (IOException e)
         {
             e.printStackTrace();
         }
-
     }
 
-    private void writeSummary (BufferedWriter writer, Instance instance) throws IOException
+    public void writeOut(Instance instance) throws IOException
+    {
+        writeSummary(instance);
+        writeSolution(instance);
+        writer.flush();
+    }
+
+    private void writeSummary (Instance instance) throws IOException
     {
         writer.write(";;; Matrix size: "+instance.getN().getFirst().size()+" x "+instance.getN().size());
+        writer.newLine();
+        writer.write(";;; |M'|: "+instance.getM1().size());
+        writer.newLine();
+        writer.write(";;; Suppressed columns: "+instance.emptyColumnsToString());
         writer.newLine();
         writer.write(";;; Solutions found: "+instance.getSolutions().size());
         writer.newLine();
@@ -33,9 +42,13 @@ public class Writer
         writer.newLine();
     }
 
-    private void writeSolution(BufferedWriter writer, Instance instance) throws IOException
+    private void writeSolution(Instance instance) throws IOException
     {
         writer.write(instance.solutionToString());
     }
 
+    public void write(String message) throws IOException {
+        writer.write(";;; ErrorMessage: " + message);
+        writer.flush();
+    }
 }
