@@ -4,15 +4,42 @@ import java.util.List;
 
 public class Instance
 {
-    private List <String> M = new ArrayList<>();
-    private List <String> M1 = new ArrayList<>(); //the matrix m after the preprocessing
+    private List<String> M = new ArrayList<>();
     private List<List<Integer>> N = new ArrayList<>();
+
+    private List<String> M1 = new ArrayList<>();
     private List<List<Integer>> N1 = new ArrayList<>();
-    private List<Integer> perLevelHypotesis= new ArrayList<>();
 
     private List<Hypothesis> solutions = new ArrayList<>();
 
-    private List <Integer> emptyColumns = new ArrayList<>(); //list of columns removed from M
+    private List<Integer> perLevelHypothesis = new ArrayList<>();
+
+    private List<Integer> emptyColumns = new ArrayList<>();
+
+
+
+    private int maxCardExplored = 0;
+
+    public Instance (List<String> m, List<List<Integer>> n)
+    {
+        this.M = new ArrayList<>(m);
+        this.N = new ArrayList<>(n);
+        generateM1andN1();
+    }
+
+    private void generateM1andN1()
+    {
+        for (int i = 0; i < M.size(); i++)
+        {
+            if(N.get(i).contains(1))
+            {
+                N1.add(N.get(i));
+                M1.add(M.get(i));
+            }
+            else
+                emptyColumns.add(i);
+        }
+    }
 
     public List<String> getM() {
         return M;
@@ -30,55 +57,12 @@ public class Instance
         return N1;
     }
 
-    public List<Integer> getEmptyColumns() {
-        return emptyColumns;
+    public int getMaxCardExplored() {
+        return maxCardExplored;
     }
 
-    public List<Hypothesis> getSolutions() {
-        return solutions;
-    }
-
-    public void setSolutions(List<Hypothesis> solutions) {
-        this.solutions = solutions;
-    }
-
-    public Instance(List<String> m, List<List<Integer>> n) {
-        M = new ArrayList<>(m);
-        N = new ArrayList<>(n);
-
-        calculateM1();
-        calculateN1();
-    }
-
-    private void calculateN1() {
-        N1 = new ArrayList<>(N);
-        N1.removeIf(x->!x.contains(1));
-    }
-
-    /**
-     * Calculates M1 by creating a copy of M and then removing elements based on
-     * the columns in N that are empty (contain only zeros).
-     * The columns that are empty are tracked and their indices are stored in the
-     * emptyColumns list.
-     */
-    private void calculateM1 ()
-    {
-        M1 = new ArrayList<>(M); // Create M1 as a copy of M
-        List<String> elementsToRemove = new ArrayList<>();
-
-        for (int i=0;i<N.size(); i++)
-        {
-            if(!N.get(i).contains(1))
-            {
-                emptyColumns.add(i); // Record the index of the empty column
-                elementsToRemove.add(M.get(i));
-            }
-        }
-        M1.removeAll(elementsToRemove);
-    }
-
-    public List<Integer> getPerLevelHypotesis() {
-        return perLevelHypotesis;
+    public void setMaxCardExplored(int maxCardExplored) {
+        this.maxCardExplored = maxCardExplored;
     }
 
     public String solutionToString()
@@ -130,10 +114,26 @@ public class Instance
     {
         //todo sistemare lo stampaggio
         StringBuilder perLevelHypotesisString = new StringBuilder();
-        for (int i = 0; i < perLevelHypotesis.size(); i++)
+        for (int i = 0; i < perLevelHypothesis.size(); i++)
         {
-         perLevelHypotesisString.append(i+1).append(" : ").append(perLevelHypotesis.get(i)).append(" - ");
+            perLevelHypotesisString.append(i+1).append(" : ").append(perLevelHypothesis.get(i)).append(" - ");
         }
         return perLevelHypotesisString.toString();
+    }
+
+    public List<Hypothesis> getSolutions() {
+        return solutions;
+    }
+
+    public void setSolutions(List<Hypothesis> solutions) {
+        this.solutions = new ArrayList<>(solutions);
+    }
+
+    public List<Integer> getPerLevelHypothesis() {
+        return perLevelHypothesis;
+    }
+
+    public void setPerLevelHypothesis(List<Integer> perLevelHypothesis) {
+        this.perLevelHypothesis = new ArrayList<>(perLevelHypothesis);
     }
 }

@@ -4,23 +4,33 @@ import java.util.List;
 
 public class Hypothesis
 {
-    private List<Integer> binaryRep = new ArrayList<>();
+    private List<Integer> binaryRep;
+    private List<Integer> hitVector;
 
-    private List<Integer> hitVector = new ArrayList<>();
+    public Hypothesis(List<Integer> binaryRep, List<Integer> hitVector)
+    {
+        this.binaryRep = new ArrayList<>(binaryRep);
+        this.hitVector = new ArrayList<>(hitVector);;
+    }
 
     public Hypothesis(List<Integer> binaryRep)
     {
         this.binaryRep = new ArrayList<>(binaryRep);
+        //todo calcHitVector???
     }
 
     public Hypothesis(Hypothesis h)
     {
-        this.binaryRep = new ArrayList<>(h.binaryRep);
-        this.hitVector = new ArrayList<>(h.hitVector);
+        this.binaryRep = new ArrayList<>(h.getBinaryRep());
+        this.hitVector = new ArrayList<>(h.getHitVector());
     }
 
     public List<Integer> getBinaryRep() {
         return binaryRep;
+    }
+
+    public void setBinaryRep(List<Integer> binaryRep) {
+        this.binaryRep = new ArrayList<>(binaryRep);
     }
 
     public List<Integer> getHitVector() {
@@ -31,101 +41,20 @@ public class Hypothesis
         this.hitVector = hitVector;
     }
 
-    public boolean isImmediateSuccessorOf(Hypothesis h)
+    public boolean isGreater (Hypothesis hypothesis)
     {
-        if(this.equals(h))
+        if(this.equals(hypothesis))
             return false;
 
-        boolean first = true;
-
-        for (int i=0; i<this.binaryRep.size(); i++)
-        {
-            if(!this.binaryRep.get(i).equals(h.getBinaryRep().get(i)))
-            {
-                if(!first)
-                    return false;
-
-                if(this.binaryRep.get(i) == 1 && h.getBinaryRep().get(i) == 0)
-                    first = false;
-                else
-                    return false;
-            }
-        }
-        return true;
-    }
-
-    public boolean isSolution(){
-        return !hitVector.contains(0);
-    }
-
-    public boolean isNullSolution()
-    {
-        return !this.binaryRep.contains(1);
-    }
-
-    public boolean isGreater(Hypothesis h)
-    {
         for (int i = 0; i < this.binaryRep.size(); i++)
         {
-            if(this.binaryRep.get(i)>h.getBinaryRep().get(i))
+            if(this.binaryRep.get(i) > hypothesis.binaryRep.get(i))
                 return true;
-            else if(this.binaryRep.get(i)<h.getBinaryRep().get(i))
+            if(this.binaryRep.get(i) < hypothesis.binaryRep.get(i))
                 return false;
         }
-        return false; //The vector are equals
-    }
 
-    public Hypothesis initialPredecessor (Hypothesis h)
-    {
-        Hypothesis possiblePredecessor = new Hypothesis(this.binaryRep);
-        boolean first = true;
-        Hypothesis secondPossiblePredecessor = new Hypothesis(this.binaryRep);
-        for( int i=possiblePredecessor.getBinaryRep().size()-1; i>=0; i--)
-        {
-            if(possiblePredecessor.getBinaryRep().get(i)==1 && first)
-            {
-                possiblePredecessor.getBinaryRep().set(i,0);
-                first = false;
-            }
-            else if(secondPossiblePredecessor.getBinaryRep().get(i)==1 && !first)
-            {
-                secondPossiblePredecessor.getBinaryRep().set(i,0);
-                break;
-            }
-        }
-
-        return possiblePredecessor.getBinaryRep().equals(h.binaryRep) ? secondPossiblePredecessor : possiblePredecessor;
-    }
-
-    public Hypothesis finalPredecessor (Hypothesis h)
-    {
-        Hypothesis possiblePredecessor = new Hypothesis(this.binaryRep);
-        boolean first = true;
-        Hypothesis secondPossiblePredecessor = new Hypothesis(this.binaryRep);
-        for(int i = 0; i < possiblePredecessor.getBinaryRep().size(); i++)
-        {
-            if(possiblePredecessor.getBinaryRep().get(i)==1 && first)
-            {
-                possiblePredecessor.getBinaryRep().set(i,0);
-                first = false;
-            }
-            else if(secondPossiblePredecessor.getBinaryRep().get(i)==1 && !first)
-            {
-                secondPossiblePredecessor.getBinaryRep().set(i,0);
-                break;
-            }
-        }
-
-        return possiblePredecessor.getBinaryRep().equals(h.binaryRep) ? secondPossiblePredecessor : possiblePredecessor;
-    }
-
-    public int cardinality(){
-        int card = 0;
-        for (Integer element : binaryRep) {
-            if (element == 1)
-                card++;
-        }
-        return card;
+        return false;
     }
 
     @Override
@@ -134,25 +63,24 @@ public class Hypothesis
         if (o == null || getClass() != o.getClass()) return false;
 
         Hypothesis that = (Hypothesis) o;
-        return this.binaryRep.equals(that.binaryRep);
+        return binaryRep.equals(that.binaryRep);
     }
 
     @Override
     public int hashCode() {
-        return this.binaryRep.hashCode();
+        int result = binaryRep.hashCode();
+        result = 31 * result + hitVector.hashCode();
+        return result;
     }
 
-    public void reCalcHitVector(Instance instance) {
-        ArrayList<Integer> newHitVector = new ArrayList<>(Collections.nCopies(getHitVector().size(), 0));
-        for (int i = 0; i < this.getBinaryRep().size(); i++) {
-            if (this.getBinaryRep().get(i)==1){
-                    for (int k = 0; k < instance.getN1().getFirst().size(); k++) {
-                        if (instance.getN1().get(i).get(k) == 1) {
-                            newHitVector.set(k, 1);
-                        }
-                }
-            }
-        }
-        this.setHitVector(new ArrayList<>(newHitVector));
+    public int cardinality()
+    {
+        int cardinality = 0;
+
+        for (int i = 0; i < this.binaryRep.size(); i++)
+            if(this.binaryRep.get(i) == 1)
+                cardinality++;
+
+        return cardinality;
     }
 }

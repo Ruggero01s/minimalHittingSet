@@ -5,36 +5,7 @@ import java.util.concurrent.locks.Lock;
 
 public class Main {
 
-    static Hypothesis h0;
-    static Instance instance;
-    static String basePath = "benchmarks/benchmarks1/";
-    static String fileName = "74L85.000.matrix";
-    static int maxCardExplored = 0;
-    static Lock lock = new ReentrantLock();
-
-    /*public static void main(String[] args) {
-        Reader r = new Reader();
-        File dir = new File(basePath);
-        File[] files = dir.listFiles();
-        if (files != null) {
-            for (File file : files) {
-				fileName = file.getName();
-                Writer w = new Writer(fileName);
-                try {
-                    instance = r.readInstance(basePath + fileName);
-                    instance.setSolutions(calculateMHS());
-                    w.writeOut(instance);
-                } catch (IOException e) {
-                    try {
-                        w.write(e.getMessage());
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            }
-        }
-
-    }*/
+    static final String filename = "74L85.024.matrix";
 
     public static void main(String[] args) {
         Writer.setUp(fileName);

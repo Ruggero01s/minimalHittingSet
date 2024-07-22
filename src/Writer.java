@@ -47,7 +47,7 @@ public class Writer
         writer.newLine();
 
         if (interrupted) {
-            writer.write(";;; Cardinality reached during exploration: " + Main.maxCardExplored);
+            writer.write(";;; Cardinality reached during exploration: " + instance.getMaxCardExplored());
             writer.newLine();
         }
     }
