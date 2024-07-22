@@ -21,13 +21,18 @@ public class Writer
 
     public static void writeOut(Instance instance, boolean interrupted) throws IOException
     {
-        writeSummary(instance);
+        writeSummary(instance, interrupted);
         writeSolution(instance);
         writer.flush();
     }
 
     private static void writeSummary (Instance instance, boolean interrupted) throws IOException
     {
+        if (interrupted)
+        {
+            writer.write(";;; The solution was interrupted by the user.");
+            writer.newLine();
+        }
         writer.write(";;; Matrix size: "+instance.getN().getFirst().size()+" x "+instance.getN().size());
         writer.newLine();
         writer.write(";;; |M'|: "+instance.getM1().size());

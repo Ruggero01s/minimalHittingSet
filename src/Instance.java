@@ -8,6 +8,7 @@ public class Instance
     private List <String> M1 = new ArrayList<>(); //the matrix m after the preprocessing
     private List<List<Integer>> N = new ArrayList<>();
     private List<List<Integer>> N1 = new ArrayList<>();
+    private List<Integer> perLevelHypotesis= new ArrayList<>();
 
     private List<Hypothesis> solutions = new ArrayList<>();
 
@@ -104,12 +105,10 @@ public class Instance
         int max = -1;
         for (Hypothesis solution : solutions) {
             int card = solution.cardinality();
-            if (card < min){
+            if (card < min)
                 min = card;
-            }
-            if (card > max){
+            if (card > max)
                 max = card;
-            }
         }
         if(max == -1 && min == Integer.MAX_VALUE)
             return "Min: NaN  Max: NaN";
@@ -127,4 +126,14 @@ public class Instance
         return emptyColumnsString.toString();
     }
 
+    public String perLevelHypotesisToString()
+    {
+        //todo sistemare lo stampaggio
+        StringBuilder perLevelHypotesisString = new StringBuilder();
+        for (int i = 0; i < perLevelHypotesis.size(); i++)
+        {
+         perLevelHypotesisString.append(i+1).append(" : ").append(perLevelHypotesis.get(i)).append(" - ");
+        }
+        return perLevelHypotesisString.toString();
+    }
 }

@@ -23,10 +23,6 @@ public class Hypothesis
         return binaryRep;
     }
 
-    public void setBinaryRep(List<Integer> binaryRep) {
-        this.binaryRep = binaryRep;
-    }
-
     public List<Integer> getHitVector() {
         return hitVector;
     }

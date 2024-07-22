@@ -1,6 +1,7 @@
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.Lock;
 
 public class Main {
 
@@ -85,7 +86,6 @@ public class Main {
                 lock.unlock();
             }
         } while (!current.isEmpty());
-
         return solutions;
     }
 
