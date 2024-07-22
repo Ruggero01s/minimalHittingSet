@@ -11,10 +11,12 @@ public class Reader {
     public static List<String> M = new ArrayList<>();
     private static List<List<Integer>> N = new ArrayList<>();
 
+    private static final String resultPath = "benchmarks/benchmarks1/";
+
     public static Instance readInstance(String filePath) throws IOException {
         M = new ArrayList<>();
         N = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(resultPath+filePath))) {
             String line;
             while ((line = br.readLine()) != null) {
                 if (line.contains(";;; Map"))
@@ -105,7 +107,5 @@ public class Reader {
 
         return resultList;
     }
-
-
 
 }

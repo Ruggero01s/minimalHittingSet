@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 
 public class KeyStopper
 {
-
+/*
     public void start()
     {
         Thread computationThread = new Thread(() -> {
@@ -61,5 +61,5 @@ public class KeyStopper
                 }
             }
         }
-    }
+    }*/
 }
