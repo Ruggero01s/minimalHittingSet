@@ -76,6 +76,10 @@ public class Instance
         M1.removeAll(elementsToRemove);
     }
 
+    public List<Integer> getPerLevelHypotesis() {
+        return perLevelHypotesis;
+    }
+
     public String solutionToString()
     {
         for (Integer column : emptyColumns)
@@ -107,7 +111,10 @@ public class Instance
                 max = card;
             }
         }
-        return "Min: " + String.valueOf(min) + " Max: " + String.valueOf(max);
+        if(max == -1 && min == Integer.MAX_VALUE)
+            return "Min: NaN  Max: NaN";
+        else
+            return "Min: " + min + " Max: " + max;
     }
 
     public String emptyColumnsToString()

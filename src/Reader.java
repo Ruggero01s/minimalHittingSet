@@ -8,10 +8,10 @@ import java.util.regex.Pattern;
 
 public class Reader {
 
-    public List<String> M = new ArrayList<>();
-    private List<List<Integer>> N = new ArrayList<>();
+    public static List<String> M = new ArrayList<>();
+    private static List<List<Integer>> N = new ArrayList<>();
 
-    public Instance readInstance(String filePath) throws IOException {
+    public static Instance readInstance(String filePath) throws IOException {
         M = new ArrayList<>();
         N = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
@@ -39,7 +39,7 @@ public class Reader {
         return new Instance(M,N);
     }
 
-    public List<List<Integer>> invertMatrix(List<List<Integer>> matrix) {
+    public static List<List<Integer>> invertMatrix(List<List<Integer>> matrix) {
         if (matrix == null || matrix.isEmpty()) {
             throw new IllegalArgumentException("Matrix cannot be null or empty");
         }
@@ -64,7 +64,7 @@ public class Reader {
         return invertedMatrix;
     }
 
-    private List<Integer> createRow(String line) throws IOException {
+    private static List<Integer> createRow(String line) throws IOException {
         List<Integer> row = new ArrayList<>();
         if (line.isBlank())
             return null;
@@ -82,7 +82,7 @@ public class Reader {
         throw new IOException();
     }
 
-    private List<String> parseMapLine(String line) {
+    private static List<String> parseMapLine(String line) {
         // Crea una lista con una dimensione iniziale basata sul numero massimo trovato negli indici
         List<String> resultList = new ArrayList<>();
 
