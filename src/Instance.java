@@ -13,10 +13,20 @@ public class Instance
     private List<Hypothesis> solutions = new ArrayList<>();
 
     private List<Integer> perLevelHypothesis = new ArrayList<>();
+    private List<Double> perLevelTime = new ArrayList<>();
 
     private List<Integer> emptyColumns = new ArrayList<>();
 
+    public long getTemporalPerformance() {
+        return temporalPerformance;
+    }
 
+    public void setTemporalPerformance(long temporalPerformance) {
+        this.temporalPerformance = temporalPerformance;
+    }
+
+    private long temporalPerformance;
+    private long spatialPerformance;
 
     private int maxCardExplored = 0;
 
@@ -24,10 +34,9 @@ public class Instance
     {
         this.M = new ArrayList<>(m);
         this.N = new ArrayList<>(n);
-        generateM1andN1();
     }
 
-    private void generateM1andN1()
+    public void generateM1andN1()
     {
         for (int i = 0; i < M.size(); i++)
         {
@@ -63,6 +72,10 @@ public class Instance
 
     public void setMaxCardExplored(int maxCardExplored) {
         this.maxCardExplored = maxCardExplored;
+    }
+
+    public List<Double> getPerLevelTime() {
+        return perLevelTime;
     }
 
     public String solutionToString()
@@ -110,15 +123,17 @@ public class Instance
         return emptyColumnsString.toString();
     }
 
-    public String perLevelHypotesisToString()
+    public String perLevelHypotesisToString(boolean interrupted)
     {
-        //todo sistemare lo stampaggio
+        int c=1;
+        if (interrupted)
+            c=0;
         StringBuilder perLevelHypotesisString = new StringBuilder();
-        for (int i = 0; i < perLevelHypothesis.size(); i++)
+        for (int i = 0; i < perLevelHypothesis.size()-c; i++)
         {
-            perLevelHypotesisString.append(i+1).append(" : ").append(perLevelHypothesis.get(i)).append(" - ");
+            perLevelHypotesisString.append(i+1).append(" -> ").append(perLevelHypothesis.get(i)).append(" || ");
         }
-        return perLevelHypotesisString.toString();
+        return perLevelHypotesisString.toString().substring(0, perLevelHypotesisString.length()-4);
     }
 
     public List<Hypothesis> getSolutions() {
@@ -135,5 +150,15 @@ public class Instance
 
     public void setPerLevelHypothesis(List<Integer> perLevelHypothesis) {
         this.perLevelHypothesis = new ArrayList<>(perLevelHypothesis);
+
+    }
+
+    public long getSpatialPerformance() {
+        return spatialPerformance;
+    }
+
+    public void updateSpatialPerformance(long size) {
+        if (size>this.spatialPerformance)
+            this.spatialPerformance = size;
     }
 }

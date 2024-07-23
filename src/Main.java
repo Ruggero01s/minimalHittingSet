@@ -5,27 +5,13 @@ import java.util.List;
 
 public class Main {
 
-    static final String filename = "74L85.024.matrix";
+    private static boolean permuteRows = true;
+    private static boolean permuteCols = true;
 
-    private static final String benchmarksPath = "benchmarks/benchmarks1/";
-
-    public static void main(String[] args) {
-        Instance instance = null;
-        try {
-            Writer.setUp(filename);
-            instance = Reader.readInstance(benchmarksPath+filename);
-            Solver solver = new Solver();
-            instance.setSolutions(new ArrayList<>(solver.solve(instance)));
-            Writer.writeOut(instance,false);
-            System.out.println(solver.all.contains(new Hypothesis(new ArrayList<>(List.of(0,0,0,0,0,0,0,0,0,0,0,0,1,1,1)))));
-        } catch (IOException e)
-        {
-            try {
-                Writer.write(e.getMessage());
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
+    public static void main(String[] args)
+    {
+        KeyStopper keyStopper = new KeyStopper();
+        keyStopper.start(permuteRows,permuteCols);
     }
 
     /*public static void main(String[] args) {

@@ -1,18 +1,30 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 public class KeyStopper
 {
-/*
-    public void start()
+    static final String filename = "test.matrix";
+
+    private static final String benchmarksPath = "benchmarks/benchmarks1/";
+    Instance instance;
+
+    public void start(boolean permuteRows, boolean permuteCols)
     {
         Thread computationThread = new Thread(() -> {
             try {
-                Main.startComputation();
+                Writer.setUp(filename);
+                instance = Reader.readInstance(benchmarksPath+filename);
+                Permutator permutator = new Permutator();
+                instance = permutator.permute(instance, permuteRows, permuteCols);
+                Solver solver = new Solver();
+                instance.setSolutions(new ArrayList<>(solver.solve(instance)));
+                //System.out.println(solver.all.contains(new Hypothesis(new ArrayList<>(List.of(0,0,0,0,0,0,0,0,0,0,0,0,1,1,1)))));
             } catch (IOException e) {
                 try {
                     Writer.write(e.getMessage());
+                    System.exit(1);
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -28,14 +40,19 @@ public class KeyStopper
         });
 
         inputThread.start();
+
+        long startTime = System.currentTimeMillis();
         computationThread.start();
+
         while (computationThread.isAlive())
         {
             continue;
         }
         try {
-            System.out.println(computationThread.isAlive());
-            Writer.writeOut(Main.instance, false);
+            long endTime = System.currentTimeMillis();
+            //System.out.println(computationThread.isAlive());
+            instance.setTemporalPerformance(endTime-startTime);
+            Writer.writeOut(instance, false);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -54,12 +71,12 @@ public class KeyStopper
                 if (input == 'q')
                 {
                     computationThread.interrupt();
-                    Writer.writeOut(Main.instance, true);
+                    Writer.writeOut(instance, true);
                     System.out.println("Stopping computation...");
                     System.exit(130);
                     break;
                 }
             }
         }
-    }*/
+    }
 }

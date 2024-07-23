@@ -6,15 +6,16 @@ public class Solver {
 
     public List<Hypothesis> solve(Instance instance)
     {
-
+        instance.generateM1andN1();
         Hypothesis h0 = new Hypothesis(Collections.nCopies(instance.getM1().size(),0));
         setFields(instance, h0);
         List<Hypothesis> current = new ArrayList<>();
         current.add(h0);
-
+        instance.getPerLevelHypothesis().add(1);
         List<Hypothesis> solutions = new ArrayList<>();
         do
         {
+            long startLevelTimer = System.currentTimeMillis();
             List<Hypothesis> next = new ArrayList<>();
             for (int i = 0; i < current.size(); i++)
             {
@@ -44,8 +45,11 @@ public class Solver {
                     if (!hp.equals(h))
                        next = merge(next, generateChildren(instance, current, h));
                 }
+                instance.updateSpatialPerformance(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
             }
-            instance.getPerLevelHypothesis().add(current.size());
+            long endLevelTimer = System.currentTimeMillis();
+            instance.getPerLevelTime().add(((double)(endLevelTimer-startLevelTimer)/1000.0));
+            instance.getPerLevelHypothesis().add(next.size());
             instance.setMaxCardExplored(instance.getMaxCardExplored()+1);
             current = next;
         }
