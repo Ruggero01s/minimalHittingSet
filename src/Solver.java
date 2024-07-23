@@ -2,6 +2,8 @@ import java.util.*;
 
 public class Solver {
 
+    public List<Hypothesis> all = new ArrayList<>();
+
     public List<Hypothesis> solve(Instance instance)
     {
 
@@ -9,6 +11,7 @@ public class Solver {
         setFields(instance, h0);
         List<Hypothesis> current = new ArrayList<>();
         current.add(h0);
+
         List<Hypothesis> solutions = new ArrayList<>();
         do
         {
@@ -16,9 +19,11 @@ public class Solver {
             for (int i = 0; i < current.size(); i++)
             {
                 Hypothesis h = current.get(i);
+                all.add(new Hypothesis(h));
+                //h.reCalcHitVector(instance);
                 if (h.isSolution())
                 {
-                    solutions.add(h);
+                    solutions.add(new Hypothesis(h));
                     current.remove(i);
                     i--;
                 }
@@ -31,11 +36,11 @@ public class Solver {
                     Hypothesis h2s = h.globalInitial();
 
                     int preRemoveLength= current.size();
-                    //removeAllBiggerHypothesis(current, h2s);
+                    removeAllBiggerHypothesis(current, h2s);
                     int postRemoveLength= current.size();
                     i = i - (preRemoveLength - postRemoveLength);
 
-                    Hypothesis hp = h.globalInitial();
+                    Hypothesis hp = current.getFirst();
                     if (!hp.equals(h))
                        next = merge(next, generateChildren(instance, current, h));
                 }
@@ -50,7 +55,12 @@ public class Solver {
 
     private void removeAllBiggerHypothesis(List<Hypothesis> current, Hypothesis h2s)
     {
-        current.removeIf(hypothesis -> hypothesis.isGreater(h2s));
+        for (int i = 0; i < current.size(); i++)
+            if (current.get(i).isGreater(h2s)) {
+                current.remove(i);
+                i--;
+            }
+        //current.removeIf(hypothesis -> hypothesis.isGreater(h2s));
     }
 
     private List<Hypothesis> merge(List<Hypothesis> next, List<Hypothesis> hypotheses) {
@@ -82,7 +92,7 @@ public class Solver {
             return children;
         }
 
-        Hypothesis hp = h.globalInitial();
+        Hypothesis hp = current.getFirst();
         for (int i = 0; i < h.getBinaryRep().indexOf(1); i++) {
             Hypothesis h1 = new Hypothesis(h.getBinaryRep());
             h1.getBinaryRep().set(i,1);

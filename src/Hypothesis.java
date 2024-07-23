@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Hypothesis
@@ -119,7 +120,7 @@ public class Hypothesis
         return distance;
     }
 
-    public Hypothesis initialPredecessor(Hypothesis h)
+    public Hypothesis initialPredecessor(Hypothesis generatingParent)
     {
         Hypothesis possiblePredecessor = new Hypothesis(this.binaryRep);
         boolean first = true;
@@ -138,10 +139,25 @@ public class Hypothesis
             }
         }
 
-        return possiblePredecessor.getBinaryRep().equals(h.binaryRep) ? secondPossiblePredecessor : possiblePredecessor;
+        return possiblePredecessor.equals(generatingParent) ? secondPossiblePredecessor : possiblePredecessor;
+
+        /*List<Hypothesis> parents = new ArrayList<>();
+        for (int i = this.binaryRep.size() - 1; i >= 0; i--)
+        {
+            Hypothesis copy = new Hypothesis(this);
+            if (this.binaryRep.get(i)==1)
+            {
+                copy.binaryRep.set(i,0);
+                parents.add(new Hypothesis(copy));
+            }
+        }
+        if (parents.getFirst().equals(generatingParent))
+            return parents.get(1);
+        else
+            return parents.getFirst();*/
     }
 
-    public Hypothesis finalPredecessor(Hypothesis h)
+    public Hypothesis finalPredecessor(Hypothesis generatingParent)
     {
         Hypothesis possiblePredecessor = new Hypothesis(this.binaryRep);
         boolean first = true;
@@ -160,7 +176,21 @@ public class Hypothesis
             }
         }
 
-        return possiblePredecessor.getBinaryRep().equals(h.binaryRep) ? secondPossiblePredecessor : possiblePredecessor;
+        return possiblePredecessor.equals(generatingParent) ? secondPossiblePredecessor : possiblePredecessor;
+        /*List<Hypothesis> parents = new ArrayList<>();
+        for (int i = this.binaryRep.size() - 1; i >= 0; i--)
+        {
+            Hypothesis copy = new Hypothesis(this);
+            if (this.binaryRep.get(i)==1)
+            {
+                copy.binaryRep.set(i,0);
+                parents.add(new Hypothesis(copy));
+            }
+        }
+        if (parents.getLast().equals(generatingParent))
+            return parents.get(parents.size()-2);
+        else
+            return parents.getLast();*/
     }
 
     public Hypothesis globalInitial()
@@ -171,5 +201,19 @@ public class Hypothesis
         newH.binaryRep.set(newH.binaryRep.lastIndexOf(1),0);
 
         return newH;
+    }
+
+    public void reCalcHitVector(Instance instance) {
+        ArrayList<Integer> newHitVector = new ArrayList<>(Collections.nCopies(getHitVector().size(), 0));
+        for (int i = 0; i < this.getBinaryRep().size(); i++) {
+            if (this.getBinaryRep().get(i)==1){
+                for (int k = 0; k < instance.getN1().getFirst().size(); k++) {
+                    if (instance.getN1().get(i).get(k) == 1) {
+                        newHitVector.set(k, 1);
+                    }
+                }
+            }
+        }
+        this.setHitVector(new ArrayList<>(newHitVector));
     }
 }

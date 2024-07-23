@@ -11,12 +11,12 @@ public class Reader {
     public static List<String> M = new ArrayList<>();
     private static List<List<Integer>> N = new ArrayList<>();
 
-    private static final String resultPath = "benchmarks/benchmarks1/";
+
 
     public static Instance readInstance(String filePath) throws IOException {
         M = new ArrayList<>();
         N = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(resultPath+filePath))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = br.readLine()) != null) {
                 if (line.contains(";;; Map"))
@@ -31,10 +31,10 @@ public class Reader {
                         N.add(row);
                 }
             }
+            br.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         N = invertMatrix(N);
         if (M.size() != N.size())
             throw new IOException("M e N hanno dimensioni diverse (M: " + M.size() + " N: " + N.size() + ")");
