@@ -43,10 +43,19 @@ public class Writer
         writer.newLine();
         writer.write(";;; Solution cardinality: "+instance.calcMinMaxCard());
         writer.newLine();
-        writer.write(";;; Number of generated Hypothesis per level: " + instance.perLevelHypotesisToString());
+        writer.write(";;; Number of generated Hypothesis per level: " + instance.perLevelHypotesisToString(interrupted));
         writer.newLine();
-
-        if (interrupted) {
+        writer.write(";;; Time taken at each level: " + instance.perLevelTimeToString());
+        writer.newLine();
+        writer.write(";;; Maximum spatial occupation: " + instance.getSpatialPerformance()/1000+ " KB");
+        writer.newLine();
+        if(!interrupted)
+        {
+            writer.write(";;; Time elapsed during computation: " + instance.getTemporalPerformance()/1000.0+ " seconds");
+            writer.newLine();
+        }
+        if (interrupted)
+        {
             writer.write(";;; Cardinality reached during exploration: " + instance.getMaxCardExplored());
             writer.newLine();
         }

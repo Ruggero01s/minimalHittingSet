@@ -136,6 +136,16 @@ public class Instance
         return perLevelHypotesisString.toString().substring(0, perLevelHypotesisString.length()-4);
     }
 
+    public  String perLevelTimeToString ()
+    {
+        StringBuilder perLevelTimeString = new StringBuilder();
+        for (int i = 0; i < perLevelTime.size(); i++)
+        {
+            perLevelTimeString.append(i+1).append(" -> ").append(perLevelTime.get(i)).append(" || ");
+        }
+        return perLevelTimeString.toString().substring(0, perLevelTimeString.length()-4);
+    }
+
     public List<Hypothesis> getSolutions() {
         return solutions;
     }
