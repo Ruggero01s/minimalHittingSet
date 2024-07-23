@@ -33,7 +33,7 @@ public class Permutator
             newM.add(instance.getM().get(newColumns.get(i)));
             List<Integer> newNRow = new ArrayList<>();
             for (int j = 0; j < newRows.size(); j++) {
-                newNRow.add(instance.getN().get(i).get(newRows.get(j)));
+                newNRow.add(instance.getN().get(newColumns.get(i)).get(newRows.get(j)));
             }
             newN.add(newNRow);
         }
