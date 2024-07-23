@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class KeyStopper
 {
-    static final String filename = "test.matrix";
+    static final String filename = "74L85.024.matrix";
 
     private static final String benchmarksPath = "benchmarks/benchmarks1/";
     Instance instance;
@@ -17,7 +17,7 @@ public class KeyStopper
                 Writer.setUp(filename);
                 instance = Reader.readInstance(benchmarksPath+filename);
                 Permutator permutator = new Permutator();
-                instance = permutator.permute(instance, permuteRows, permuteCols);
+                //instance = permutator.permute(instance, permuteRows, permuteCols);
                 Solver solver = new Solver();
                 instance.setSolutions(new ArrayList<>(solver.solve(instance)));
                 //System.out.println(solver.all.contains(new Hypothesis(new ArrayList<>(List.of(0,0,0,0,0,0,0,0,0,0,0,0,1,1,1)))));

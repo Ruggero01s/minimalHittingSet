@@ -216,4 +216,13 @@ public class Hypothesis
         }
         this.setHitVector(new ArrayList<>(newHitVector));
     }
+
+    public boolean isSubsetOf(Hypothesis hypothesis)
+    {
+        for (int i=0; i< this.binaryRep.size(); i++)
+            if(this.binaryRep.get(i)== 1 && hypothesis.getBinaryRep().get(i) == 0)
+                return false;
+
+        return true;
+    }
 }
