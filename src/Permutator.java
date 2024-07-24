@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -5,40 +6,82 @@ import java.util.Random;
 
 public class Permutator
 {
+    private static boolean permuteRows = true;
+    private static boolean permuteCols = true;
 
-    public Instance permute(Instance instance, boolean permuteRows, boolean permuteColumns)
+    private static String basePath = "benchmarks/benchmarks1/";
+    private static String instanceToPermutePath = "74L85.000.matrix";
+    private static Instance instanceToPermute;
+    private static List<Permutation> permutations = new ArrayList<>();
+    private static final int numberOfPermutations = 5;
+
+    public static void setUp(boolean permRows, boolean permCols){
+        permuteRows = permRows;
+        permuteCols = permCols;
+    }
+
+    public static void main(String[] args) {
+        try {
+            instanceToPermute = Reader.readInstance(basePath,instanceToPermutePath);
+        } catch (IOException e) {
+            try {
+                Writer.write(";;; Error reading file ("+basePath+instanceToPermutePath+"): "+ e.getMessage());
+            } catch (IOException ex) {
+                e.printStackTrace();
+            }
+        }
+        for(int i = 0; i < numberOfPermutations; i++){
+            Permutation permutedInstance = permute(instanceToPermute);
+            permutedInstance.setInstanceName(generateName(permutedInstance, i));
+            permutations.add(permutedInstance);
+        }
+        for (Permutation permutation : permutations) {
+            try {
+                Writer.writePermutation(permutation);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private static String generateName(Permutation perm, int i) {
+        return perm.getOriginInstance().substring(perm.getOriginInstance().lastIndexOf("/")+1, perm.getOriginInstance().lastIndexOf(".")+1)+(i+1)+".matrix";
+    }
+
+    public static Permutation permute(Instance instance)
     {
-        if (!permuteRows && !permuteColumns)
-            return new Instance(instance.getM(), instance.getN());
+        Random rand = new Random();
 
         List<Integer> newColumns = new ArrayList<>();
-        for (int i = 0; i < instance.getM().size(); i++)
+        for (int i = 0; i < instance.getInputMatrix().size(); i++)
             newColumns.add(i);
 
-        if (permuteColumns)
-            Collections.shuffle(newColumns, new Random());
-
         List<Integer> newRows = new ArrayList<>();
-        for (int i = 0; i < instance.getN().getFirst().size(); i++)
+        for (int i = 0; i < instance.getInputMatrix().getFirst().size(); i++)
             newRows.add(i);
+
+        if (!permuteRows && !permuteCols)
+            return new Permutation(new Instance(instance.instanceName, instance.getInputMatrix()),basePath+instanceToPermutePath, newColumns, newRows);
+
+        if (permuteCols)
+            Collections.shuffle(newColumns, rand);
 
         if (permuteRows)
             Collections.shuffle(newRows, new Random());
 
 
-        List<String> newM = new ArrayList<>();
         List<List<Integer>> newN = new ArrayList<>();
-        //todo fix shuffling
-        for (int i = 0; i < newColumns.size(); i++) {
-            newM.add(instance.getM().get(newColumns.get(i)));
+        for (Integer newColumn : newColumns)
+        {
             List<Integer> newNRow = new ArrayList<>();
-            for (int j = 0; j < newRows.size(); j++) {
-                newNRow.add(instance.getN().get(newColumns.get(i)).get(newRows.get(j)));
-            }
+            for (Integer newRow : newRows)
+                newNRow.add(instance.getInputMatrix().get(newColumn).get(newRow));
+
             newN.add(newNRow);
         }
-
-
-        return new Instance(newM, newN);
+        Instance newInstance = new Instance(instance.instanceName, newN);
+        //System.out.println(instance.inputMatrixToString());
+        //System.out.println(newInstance.inputMatrixToString());
+        return new Permutation(newInstance, basePath+instanceToPermutePath, newColumns, newRows);
     }
 }

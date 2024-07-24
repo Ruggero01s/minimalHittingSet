@@ -10,12 +10,12 @@ public class Instance
     private List<String> M1 = new ArrayList<>();
     private List<List<Integer>> N1 = new ArrayList<>();
 
-    private List<Hypothesis> solutions = new ArrayList<>();
+    List<Hypothesis> solutions = new ArrayList<>();
 
-    private List<Integer> perLevelHypothesis = new ArrayList<>();
-    private List<Double> perLevelTime = new ArrayList<>();
+    List<Integer> perLevelHypothesis = new ArrayList<>();
+    List<Double> perLevelTime = new ArrayList<>();
 
-    private List<Integer> emptyColumns = new ArrayList<>();
+    List<Integer> emptyColumns = new ArrayList<>();
 
     public long getTemporalPerformance() {
         return temporalPerformance;
@@ -25,22 +25,28 @@ public class Instance
         this.temporalPerformance = temporalPerformance;
     }
 
-    private long temporalPerformance;
-    private long spatialPerformance;
+    long temporalPerformance;
+    long spatialPerformance;
 
-    private int maxCardExplored = 0;
+    int maxCardExplored = 0;
 
-    public Instance (List<String> m, List<List<Integer>> n)
+    public Instance (String instanceName, List<List<Integer>> input)
     {
-        this.M = new ArrayList<>(m);
-        this.N = new ArrayList<>(n);
+        this.instanceName = instanceName;
+        this.inputMatrix = new ArrayList<>(input);
+    }
+
+    public Instance (Instance instance)
+    {
+        this.instanceName = instance.instanceName;
+        this.inputMatrix = new ArrayList<>(instance.inputMatrix);
     }
 
     public void generateM1andN1()
     {
         for (int i = 0; i < M.size(); i++)
         {
-            if(N.get(i).contains(1))
+            if(inputMatrix.get(i).contains(1))
             {
                 N1.add(N.get(i));
                 M1.add(M.get(i));
@@ -58,12 +64,12 @@ public class Instance
         return M1;
     }
 
-    public List<List<Integer>> getN() {
-        return N;
+    public List<List<Integer>> getInputMatrix() {
+        return inputMatrix;
     }
 
-    public List<List<Integer>> getN1() {
-        return N1;
+    public List<List<Integer>> getInputMatrix1() {
+        return inputMatrix1;
     }
 
     public int getMaxCardExplored() {
@@ -95,6 +101,19 @@ public class Instance
         }
 
         return solutionString.toString();
+    }
+
+    public String inputMatrixToString(){
+        List<List<Integer>> inputMatrix = new ArrayList<>(Reader.invertMatrix(this.inputMatrix));
+
+        StringBuilder stringBuilder = new StringBuilder();
+        for (List<Integer> row : inputMatrix){
+            for (Integer column : row){
+                stringBuilder.append(column).append(" ");
+            }
+            stringBuilder.append(" -\n");
+        }
+        return stringBuilder.toString();
     }
 
     public String calcMinMaxCard() {
@@ -131,7 +150,7 @@ public class Instance
         StringBuilder perLevelHypotesisString = new StringBuilder();
         for (int i = 0; i < perLevelHypothesis.size()-c; i++)
         {
-            perLevelHypotesisString.append(i+1).append(" -> ").append(perLevelHypothesis.get(i)).append(" || ");
+            perLevelHypotesisString.append(i).append(" -> ").append(perLevelHypothesis.get(i)).append(" || ");
         }
         return perLevelHypotesisString.toString().substring(0, perLevelHypotesisString.length()-4);
     }
@@ -141,7 +160,7 @@ public class Instance
         StringBuilder perLevelTimeString = new StringBuilder();
         for (int i = 0; i < perLevelTime.size(); i++)
         {
-            perLevelTimeString.append(i+1).append(" -> ").append(perLevelTime.get(i)).append(" || ");
+            perLevelTimeString.append(i).append(" -> ").append(perLevelTime.get(i)).append(" || ");
         }
         return perLevelTimeString.toString().substring(0, perLevelTimeString.length()-4);
     }
@@ -170,5 +189,13 @@ public class Instance
     public void updateSpatialPerformance(long size) {
         if (size>this.spatialPerformance)
             this.spatialPerformance = size;
+    }
+
+    public String getInstanceName() {
+        return instanceName;
+    }
+
+    public void setInstanceName(String instanceName) {
+        this.instanceName = instanceName;
     }
 }

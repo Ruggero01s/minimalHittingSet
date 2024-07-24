@@ -8,37 +8,40 @@ import java.util.regex.Pattern;
 
 public class Reader {
 
-    public static List<String> M = new ArrayList<>();
-    private static List<List<Integer>> N = new ArrayList<>();
+    private static List<List<Integer>> input = new ArrayList<>();
 
 
-
-    public static Instance readInstance(String filePath) throws IOException {
-        M = new ArrayList<>();
-        N = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (line.contains(";;; Map"))
-                {
-                    M = new ArrayList<>(parseMapLine(line));
-                } else if (line.contains(";;;")) {
-                    continue;
-                }
-                else {
-                    List<Integer> row = createRow(line);
-                    if (row != null)
-                        N.add(row);
-                }
+    public static Instance readInstance(String basePath, String fileName) throws IOException {
+        input = new ArrayList<>();
+        BufferedReader br = new BufferedReader(new FileReader(basePath + fileName));
+        String line;
+        List<Integer> newCols = new ArrayList<>();
+        List<Integer> newRows = new ArrayList<>();
+        while ((line = br.readLine()) != null) {
+            if (line.contains(";;;")) {
+                continue;
+            } else if (line.contains("Cols")) {
+                newCols = parsePermCols(line);
+            } else if (line.contains("Rows")) {
+                newRows = parsePermRows(line);
+            } else {
+                List<Integer> row = createRow(line);
+                if (row != null)
+                    input.add(row);
             }
-            br.close();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-        N = invertMatrix(N);
-        if (M.size() != N.size())
-            throw new IOException("M e N hanno dimensioni diverse (M: " + M.size() + " N: " + N.size() + ")");
-        return new Instance(M,N);
+        input = invertMatrix(input);
+        if (newCols.isEmpty() && newRows.isEmpty())
+            return new Instance(fileName, input);
+        else {
+            String[] parts = fileName.split("\\.");
+            StringBuilder originInstanceName = new StringBuilder();
+            for (int i = 0; i < parts.length-2; i++) {
+                originInstanceName.append(parts[i]).append(".");
+            }
+            originInstanceName.append("matrix");
+            return new Permutation(new Instance(fileName, input), originInstanceName.toString(), newCols, newRows);
+        }
     }
 
     public static List<List<Integer>> invertMatrix(List<List<Integer>> matrix) {
@@ -70,7 +73,7 @@ public class Reader {
         List<Integer> row = new ArrayList<>();
         if (line.isBlank())
             return null;
-        line = line.replaceAll("\\s+","");
+        line = line.replaceAll("\\s+", "");
         char[] chars = line.toCharArray();
 
         for (int i = 0; i < chars.length; i++) {
@@ -93,7 +96,7 @@ public class Reader {
         Matcher matcher = pattern.matcher(line);
 
         while (matcher.find()) {
-            int index = Integer.parseInt(matcher.group(1))-1;
+            int index = Integer.parseInt(matcher.group(1)) - 1;
             String value = matcher.group(2);
 
             // Assicura che la lista abbia abbastanza spazio per l'indice corrente
@@ -106,6 +109,32 @@ public class Reader {
         }
 
         return resultList;
+    }
+
+    private static List<Integer> parsePermCols(String line) {
+        List<Integer> colsList = new ArrayList<>();
+
+        String cleanedInput = line.replace("Cols: ", "").replace("[", "").replace("]", "");
+
+        String[] stringArray = cleanedInput.split(", ");
+
+        for (String s : stringArray) {
+            colsList.add(Integer.parseInt(s));
+        }
+        return colsList;
+    }
+
+    private static List<Integer> parsePermRows(String line) {
+        List<Integer> rowsList = new ArrayList<>();
+
+        String cleanedInput = line.replace("Rows: ", "").replace("[", "").replace("]", "");
+
+        String[] stringArray = cleanedInput.split(", ");
+
+        for (String s : stringArray) {
+            rowsList.add(Integer.parseInt(s));
+        }
+        return rowsList;
     }
 
 }

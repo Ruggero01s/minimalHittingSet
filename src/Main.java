@@ -1,11 +1,17 @@
 public class Main {
 
-    private static boolean permuteRows = true;
-    private static boolean permuteCols = true;
+    private static final String fileName = "74L85.000.0.matrix";
+    private static final String basePath ="permutations/";
+//    private static final String fileName = "74L85.000.matrix";
+//    private static final String basePath ="benchmarks/benchmarks1/";
 
     public static void main(String[] args)
     {
-        KeyStopper keyStopper = new KeyStopper();
-        keyStopper.start(permuteRows,permuteCols);
+        Initializer initializer = new Initializer(basePath, fileName);
+        initializer.start();
     }
 }
+
+//todo controllare generazione riassunti
+//todo permutator che genera file nuovi permutati, con nei commenti gli shuffle che ha compiuto
+//todo fare programmino per le performance spaziali e temporali, ruba le righe della matrice e delle velocità con un parserino e fa un grafico

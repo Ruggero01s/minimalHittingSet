@@ -43,9 +43,6 @@ public class Hypothesis
 
     public boolean isGreater (Hypothesis hypothesis)
     {
-        if(this.equals(hypothesis))
-            return false;
-
         for (int i = 0; i < this.binaryRep.size(); i++)
         {
             if(this.binaryRep.get(i) > hypothesis.binaryRep.get(i))
@@ -201,28 +198,5 @@ public class Hypothesis
         newH.binaryRep.set(newH.binaryRep.lastIndexOf(1),0);
 
         return newH;
-    }
-
-    public void reCalcHitVector(Instance instance) {
-        ArrayList<Integer> newHitVector = new ArrayList<>(Collections.nCopies(getHitVector().size(), 0));
-        for (int i = 0; i < this.getBinaryRep().size(); i++) {
-            if (this.getBinaryRep().get(i)==1){
-                for (int k = 0; k < instance.getN1().getFirst().size(); k++) {
-                    if (instance.getN1().get(i).get(k) == 1) {
-                        newHitVector.set(k, 1);
-                    }
-                }
-            }
-        }
-        this.setHitVector(new ArrayList<>(newHitVector));
-    }
-
-    public boolean isSubsetOf(Hypothesis hypothesis)
-    {
-        for (int i=0; i< this.binaryRep.size(); i++)
-            if(this.binaryRep.get(i)== 1 && hypothesis.getBinaryRep().get(i) == 0)
-                return false;
-
-        return true;
     }
 }

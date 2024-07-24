@@ -7,71 +7,58 @@ public class Solver
 
 	public List<Hypothesis> solve(Instance instance)
 	{
-		instance.generateM1andN1();
-		Hypothesis h0=new Hypothesis(Collections.nCopies(instance.getM1().size(), 0));
+		long startTime = System.currentTimeMillis();
+		instance.generateInputMatrix1();
+		Hypothesis h0 = new Hypothesis(Collections.nCopies(instance.getInputMatrix1().size(),0));
 		setFields(instance, h0);
-		List<Hypothesis> current=new ArrayList<>();
+		List<Hypothesis> current = new ArrayList<>();
 		current.add(h0);
 		instance.getPerLevelHypothesis().add(1);
-		List<Hypothesis> solutions=new ArrayList<>();
-
-		while (!current.isEmpty())
+		List<Hypothesis> solutions = new ArrayList<>();
+		do
 		{
-			long startLevelTimer=System.currentTimeMillis();
-			List<Hypothesis> next=new ArrayList<>();
-
-			for (Iterator<Hypothesis> iterator=current.iterator(); iterator.hasNext(); )
+			long startLevelTimer = System.currentTimeMillis();
+			List<Hypothesis> next = new ArrayList<>();
+			for (int i = 0; i < current.size(); i++)
 			{
-				Hypothesis h=iterator.next();
+				Hypothesis h = current.get(i);
 				all.add(new Hypothesis(h));
-
+				//h.reCalcHitVector(instance);
 				if (h.isSolution())
 				{
-					if (isMinimal(solutions, h))
-						solutions.add(new Hypothesis(h));
-
-					iterator.remove();
+					solutions.add(new Hypothesis(h));
+					current.remove(i);
+					i--;
 				}
 				else if (h.isNullSolution())
 				{
-					next.addAll(generateChildren(instance, h, current));
+					next.addAll(generateChildren(instance, current, h));
 				}
-				else if (h.getBinaryRep().indexOf(1)!=0)
+				else if (h.getBinaryRep().indexOf(1) != 0)
 				{
-					Hypothesis h2s=h.globalInitial();
+					Hypothesis h2s = h.globalInitial();
 
-					int preRemoveLength=current.size();
+					int preRemoveLength= current.size();
 					removeAllBiggerHypothesis(current, h2s);
-					int postRemoveLength=current.size();
-					int removalCount=preRemoveLength-postRemoveLength;
+					int postRemoveLength= current.size();
+					i = i - (preRemoveLength - postRemoveLength);
 
-					if (removalCount>0)
-						iterator=current.listIterator(current.indexOf(h)-removalCount);
-
-					Hypothesis hp=current.getFirst();
+					Hypothesis hp = current.getFirst();
 					if (!hp.equals(h))
-						next.addAll(generateChildren(instance, h, current));
+						next = merge(next, generateChildren(instance, current, h));
 				}
-				instance.updateSpatialPerformance(Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory());
+				instance.updateSpatialPerformance(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
 			}
-
-			long endLevelTimer=System.currentTimeMillis();
-			instance.getPerLevelTime().add(((double) (endLevelTimer-startLevelTimer)/1000.0));
+			long endLevelTimer = System.currentTimeMillis();
+			instance.getPerLevelTime().add(((double)(endLevelTimer-startLevelTimer)/1000.0));
 			instance.getPerLevelHypothesis().add(next.size());
 			instance.setMaxCardExplored(instance.getMaxCardExplored()+1);
-			current=next;
+			current = next;
 		}
-
+		while (!current.isEmpty());
+		long endTime = System.currentTimeMillis();
+		instance.setTemporalPerformance(endTime-startTime);
 		return solutions;
-	}
-
-	private boolean isMinimal(List<Hypothesis> solutions, Hypothesis h)
-	{
-		for (Hypothesis solution : solutions)
-			if (solution.isSubsetOf(h))
-				return false;
-
-		return true;
 	}
 
 	private void removeAllBiggerHypothesis(List<Hypothesis> current, Hypothesis h2s)
@@ -102,57 +89,53 @@ public class Solver
 	}
 
 
-	private List<Hypothesis> generateChildren(Instance instance, Hypothesis h, List<Hypothesis> current)
-	{
-		List<Hypothesis> children=new ArrayList<>();
-		if (h.isNullSolution())
-		{
-			for (int i=0; i<instance.getM1().size(); i++)
-			{
-				Hypothesis h1=new Hypothesis(h.getBinaryRep());
-				h1.getBinaryRep().set(i, 1);
+	private List<Hypothesis> generateChildren(Instance instance, List<Hypothesis> current, Hypothesis h) {
+		List<Hypothesis> children = new ArrayList<>();
+		if (h.isNullSolution()){
+			for (int i = 0; i < instance.getInputMatrix1().size(); i++) {
+				Hypothesis h1 = new Hypothesis(h.getBinaryRep());
+				h1.getBinaryRep().set(i,1);
 				setFields(instance, h1);
 				children.add(h1);
 			}
 			return children;
 		}
 
-		for (int i=0; i<h.getBinaryRep().indexOf(1); i++)
-		{
-			if (h.getBinaryRep().get(i)==0)
-			{
-				Hypothesis h1=new Hypothesis(h.getBinaryRep());
-				h1.getBinaryRep().set(i, 1);
-				setFields(instance, h1);
-				h.propagate(h1);
-				Hypothesis h2i=h1.initialPredecessor(h);
-				Hypothesis h2f=h1.finalPredecessor(h);
-				int counter=0;
-
-				for (Hypothesis hp : current)
-				{
-					if (h2i.isGreaterOrEqual(hp) && hp.isGreaterOrEqual(h2f))
-					{
-						if (hp.hammingDist(h1)==1 && hp.hammingDist(h)==2)
-						{
-							hp.propagate(h1);
-							counter++;
-						}
-					}
+		Hypothesis hp = current.getFirst();
+		for (int i = 0; i < h.getBinaryRep().indexOf(1); i++) {
+			Hypothesis h1 = new Hypothesis(h.getBinaryRep());
+			h1.getBinaryRep().set(i,1);
+			setFields(instance, h1);
+			h.propagate(h1);
+			Hypothesis h2i = h1.initialPredecessor(h);
+			Hypothesis h2f = h1.finalPredecessor(h);
+			int counter = 0;
+            /*for (Hypothesis hypothesis : current) {
+                if ((h2i.isGreaterOrEqual(hypothesis)) && (hypothesis.isGreaterOrEqual(h2f))){
+                    if (hypothesis.hammingDist(h1)==1 && hypothesis.hammingDist(h)==2){
+                        hypothesis.propagate(h1);
+                        counter++;
+                    }
+                }
+            }*/
+			while ((h2i.isGreaterOrEqual(hp)) && (hp.isGreaterOrEqual(h2f))) {
+				if (hp.hammingDist(h1)==1 && hp.hammingDist(h)==2){
+					hp.propagate(h1);
+					counter++;
 				}
-
-				if (counter==h.cardinality())
-					children.add(h1);
+				hp = current.get(current.indexOf(hp)+1);
 			}
+			if (counter == h.cardinality())
+				children.add(h1);
 		}
 		return children;
 	}
 
 	private void setFields(Instance instance, Hypothesis h)
 	{
-		if (h.hammingDist(new Hypothesis(Collections.nCopies(instance.getM1().size(), 0)))==1)
-			h.setHitVector(instance.getN1().get(h.getBinaryRep().indexOf(1)));
+		if (h.hammingDist(new Hypothesis(Collections.nCopies(instance.getInputMatrix1().size(), 0)))==1)
+			h.setHitVector(instance.getInputMatrix1().get(h.getBinaryRep().indexOf(1)));
 		else
-			h.setHitVector(Collections.nCopies(instance.getN1().getFirst().size(), 0));
+			h.setHitVector(Collections.nCopies(instance.getInputMatrix1().getFirst().size(), 0));
 	}
 }
