@@ -4,11 +4,11 @@ import java.util.List;
 
 public class Instance
 {
-    private List<String> M = new ArrayList<>();
-    private List<List<Integer>> N = new ArrayList<>();
+    String instanceName;
 
-    private List<String> M1 = new ArrayList<>();
-    private List<List<Integer>> N1 = new ArrayList<>();
+    List<List<Integer>> inputMatrix = new ArrayList<>();
+
+    List<List<Integer>> inputMatrix1 = new ArrayList<>();
 
     List<Hypothesis> solutions = new ArrayList<>();
 
@@ -42,27 +42,19 @@ public class Instance
         this.inputMatrix = new ArrayList<>(instance.inputMatrix);
     }
 
-    public void generateM1andN1()
+    public void generateInputMatrix1()
     {
-        for (int i = 0; i < M.size(); i++)
+        for (int i = 0; i < inputMatrix.size(); i++)
         {
             if(inputMatrix.get(i).contains(1))
             {
-                N1.add(N.get(i));
-                M1.add(M.get(i));
+                inputMatrix1.add(inputMatrix.get(i));
             }
             else
                 emptyColumns.add(i);
         }
     }
 
-    public List<String> getM() {
-        return M;
-    }
-
-    public List<String> getM1() {
-        return M1;
-    }
 
     public List<List<Integer>> getInputMatrix() {
         return inputMatrix;
@@ -89,6 +81,8 @@ public class Instance
         for (Integer column : emptyColumns)
             for (Hypothesis solution : solutions)
                 solution.getBinaryRep().add(column,0);
+
+        //solutions = new ArrayList<>(Permutator.permuteSolutionsToOriginal(solutions));
 
         StringBuilder solutionString = new StringBuilder();
         for (Hypothesis solution : solutions)
@@ -177,7 +171,8 @@ public class Instance
         return perLevelHypothesis;
     }
 
-    public void setPerLevelHypothesis(List<Integer> perLevelHypothesis) {
+    public void setPerLevelHypothesis(List<Integer> perLevelHypothesis)
+    {
         this.perLevelHypothesis = new ArrayList<>(perLevelHypothesis);
 
     }

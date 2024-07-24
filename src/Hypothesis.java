@@ -16,7 +16,6 @@ public class Hypothesis
     public Hypothesis(List<Integer> binaryRep)
     {
         this.binaryRep = new ArrayList<>(binaryRep);
-        //todo calcHitVector???
     }
 
     public Hypothesis(Hypothesis h)
@@ -25,19 +24,23 @@ public class Hypothesis
         this.hitVector = new ArrayList<>(h.getHitVector());
     }
 
-    public List<Integer> getBinaryRep() {
+    public List<Integer> getBinaryRep()
+    {
         return binaryRep;
     }
 
-    public void setBinaryRep(List<Integer> binaryRep) {
+    public void setBinaryRep(List<Integer> binaryRep)
+    {
         this.binaryRep = new ArrayList<>(binaryRep);
     }
 
-    public List<Integer> getHitVector() {
+    public List<Integer> getHitVector()
+    {
         return hitVector;
     }
 
-    public void setHitVector(List<Integer> hitVector) {
+    public void setHitVector(List<Integer> hitVector)
+    {
         this.hitVector = new ArrayList<>(hitVector);
     }
 
@@ -137,21 +140,6 @@ public class Hypothesis
         }
 
         return possiblePredecessor.equals(generatingParent) ? secondPossiblePredecessor : possiblePredecessor;
-
-        /*List<Hypothesis> parents = new ArrayList<>();
-        for (int i = this.binaryRep.size() - 1; i >= 0; i--)
-        {
-            Hypothesis copy = new Hypothesis(this);
-            if (this.binaryRep.get(i)==1)
-            {
-                copy.binaryRep.set(i,0);
-                parents.add(new Hypothesis(copy));
-            }
-        }
-        if (parents.getFirst().equals(generatingParent))
-            return parents.get(1);
-        else
-            return parents.getFirst();*/
     }
 
     public Hypothesis finalPredecessor(Hypothesis generatingParent)
@@ -174,20 +162,6 @@ public class Hypothesis
         }
 
         return possiblePredecessor.equals(generatingParent) ? secondPossiblePredecessor : possiblePredecessor;
-        /*List<Hypothesis> parents = new ArrayList<>();
-        for (int i = this.binaryRep.size() - 1; i >= 0; i--)
-        {
-            Hypothesis copy = new Hypothesis(this);
-            if (this.binaryRep.get(i)==1)
-            {
-                copy.binaryRep.set(i,0);
-                parents.add(new Hypothesis(copy));
-            }
-        }
-        if (parents.getLast().equals(generatingParent))
-            return parents.get(parents.size()-2);
-        else
-            return parents.getLast();*/
     }
 
     public Hypothesis globalInitial()

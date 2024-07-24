@@ -67,8 +67,7 @@ public class Permutator
             Collections.shuffle(newColumns, rand);
 
         if (permuteRows)
-            Collections.shuffle(newRows, new Random());
-
+            Collections.shuffle(newRows, rand);
 
         List<List<Integer>> newN = new ArrayList<>();
         for (Integer newColumn : newColumns)
