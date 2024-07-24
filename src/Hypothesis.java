@@ -10,7 +10,7 @@ public class Hypothesis
     public Hypothesis(List<Integer> binaryRep, List<Integer> hitVector)
     {
         this.binaryRep = new ArrayList<>(binaryRep);
-        this.hitVector = new ArrayList<>(hitVector);;
+        this.hitVector = new ArrayList<>(hitVector);
     }
 
     public Hypothesis(List<Integer> binaryRep)

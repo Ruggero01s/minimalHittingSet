@@ -1,7 +1,10 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class Main {
 
-    private static final String fileName = "74L85.000.0.matrix";
-    private static final String basePath ="permutations/";
+    private static final String fileName = "c880.095.matrix";
+    private static final String basePath ="benchmarks/benchmarks1/";
 //    private static final String fileName = "74L85.000.matrix";
 //    private static final String basePath ="benchmarks/benchmarks1/";
 
