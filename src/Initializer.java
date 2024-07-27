@@ -58,7 +58,7 @@ public class Initializer {
 
     private void checkForKeyPress(Thread computationThread) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        System.out.println("\nProgram is Running...\nPress 'q' then 'Enter' to stop the program.");
+        System.out.println("\nProgram is computing instance \""+ instance.getInstanceName() + "\"...\nPress 'q' then 'Enter' to stop the program.");
         while (!finished) {
             if (reader.ready()) {
                 int input = reader.read();
