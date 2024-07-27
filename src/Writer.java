@@ -53,7 +53,7 @@ public class Writer {
         writer.write(";;; Maximum spatial occupation: " + instance.getSpatialPerformance() / 1000 + " KB");
         writer.newLine();
         if (!interrupted) {
-            writer.write(";;; Time elapsed during computation: " + instance.getTemporalPerformance() / 1000.0 + " seconds");
+            writer.write(";;; Time elapsed during computation: " + instance.getTemporalPerformance() + " milliseconds");
             writer.newLine();
         }
         if (interrupted) {
@@ -63,9 +63,7 @@ public class Writer {
     }
 
     private static void writeSolution(Instance instance) throws IOException {
-        if (instance instanceof Permutation permutation) {
-            writer.write(permutation.solutionToString());
-        } else writer.write(instance.solutionToString());
+        writer.write(instance.solutionToString());
     }
 
     public static void write(String message) throws IOException {

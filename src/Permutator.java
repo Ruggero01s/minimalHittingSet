@@ -13,7 +13,7 @@ public class Permutator
     private static String instanceToPermutePath = "74L85.000.matrix";
     private static Instance instanceToPermute;
     private static List<Permutation> permutations = new ArrayList<>();
-    private static final int numberOfPermutations = 5;
+    private static final int numberOfPermutations = 10;
 
     public static void setUp(boolean permRows, boolean permCols){
         permuteRows = permRows;

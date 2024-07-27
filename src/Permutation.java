@@ -46,7 +46,7 @@ public class Permutation extends Instance {
     }
 
     private List<Hypothesis> permuteSolutionsToOriginal() {
-        //todo check
+        //todo check, mi sembra che non stia facendo giusto
         List<Hypothesis> newSolutions = new ArrayList<>();
         if (!newColumns.isEmpty()) {
             for (Hypothesis solution : solutions) {
@@ -59,4 +59,5 @@ public class Permutation extends Instance {
         }
         return newSolutions;
     }
+
 }
