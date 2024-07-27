@@ -11,7 +11,7 @@ public class Solver {
 
 
     public void solve(Instance instance) {
-        long startTime = System.currentTimeMillis();
+        long startTime = System.nanoTime();
         instance.generateInputMatrix1();
         Hypothesis h0 = new Hypothesis(Collections.nCopies(instance.getInputMatrix1().size(), 0));
         setFields(instance, h0);
