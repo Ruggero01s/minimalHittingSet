@@ -7,10 +7,13 @@ public class Initializer {
     private String fileName;
     private String basePath;
     private Instance instance;
+    boolean finished = false;
+    Writer writer;
 
     public Initializer(String basePath, String fileName) {
         this.basePath = basePath;
         this.fileName = fileName;
+        writer = new Writer(fileName);
     }
 
     public void start() {
@@ -18,16 +21,15 @@ public class Initializer {
             instance = Reader.readInstance(basePath, fileName);
         } catch (IOException e) {
             try {
-                Writer.write(";;; Error reading file ("+ basePath + fileName+"): "+ e.getMessage());
+                writer.write(";;; Error reading file ("+ basePath + fileName+"): "+ e.getMessage());
             } catch (IOException ex) {
                 e.printStackTrace();
             }
         }
 
         Thread computationThread = new Thread(() -> {
-            Writer.setUp(fileName);
             Solver solver = new Solver();
-            instance.setSolutions(new ArrayList<>(solver.solve(instance)));
+            solver.solve(instance);
         });
 
         Thread inputThread = new Thread(() -> {
@@ -46,22 +48,23 @@ public class Initializer {
         }
 
         try {
-            Writer.writeOut(instance, false);
+            writer.writeOut(instance, false);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.exit(0);
+        finished = true;
+        return;
     }
 
     private void checkForKeyPress(Thread computationThread) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("\nProgram is Running...\nPress 'q' then 'Enter' to stop the program.");
-        while (true) {
+        while (!finished) {
             if (reader.ready()) {
                 int input = reader.read();
                 if (input == 'q') {
                     computationThread.interrupt();
-                    Writer.writeOut(instance, true);
+                    writer.writeOut(instance, true);
                     System.out.println("Stopping computation...");
                     System.exit(130);
                     break;

@@ -16,15 +16,15 @@ public class Instance {
 
     List<Integer> emptyColumns = new ArrayList<>();
 
-    public long getTemporalPerformance() {
+    public double getTemporalPerformance() {
         return temporalPerformance;
     }
 
-    public void setTemporalPerformance(long temporalPerformance) {
+    public void setTemporalPerformance(double temporalPerformance) {
         this.temporalPerformance = temporalPerformance;
     }
 
-    long temporalPerformance;
+    double temporalPerformance;
     long spatialPerformance;
 
     int maxCardExplored = 0;
@@ -136,7 +136,7 @@ public class Instance {
     public String perLevelTimeToString() {
         StringBuilder perLevelTimeString = new StringBuilder();
         for (int i = 0; i < perLevelTime.size(); i++) {
-            perLevelTimeString.append(i).append(" -> ").append(perLevelTime.get(i)).append(" || ");
+            perLevelTimeString.append(i).append(" -> ").append(perLevelTime.get(i)).append("ms || ");
         }
         return perLevelTimeString.toString().substring(0, perLevelTimeString.length() - 4);
     }

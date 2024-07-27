@@ -10,10 +10,11 @@ public class Permutator
     private static boolean permuteCols = true;
 
     private static String basePath = "benchmarks/benchmarks1/";
-    private static String instanceToPermutePath = "74L85.000.matrix";
+    private static String fileName = "74L85.000.matrix";
     private static Instance instanceToPermute;
     private static List<Permutation> permutations = new ArrayList<>();
     private static final int numberOfPermutations = 10;
+    private static Writer writer;
 
     public static void setUp(boolean permRows, boolean permCols){
         permuteRows = permRows;
@@ -21,11 +22,12 @@ public class Permutator
     }
 
     public static void main(String[] args) {
+        writer = new Writer(fileName);
         try {
-            instanceToPermute = Reader.readInstance(basePath,instanceToPermutePath);
+            instanceToPermute = Reader.readInstance(basePath, fileName);
         } catch (IOException e) {
             try {
-                Writer.write(";;; Error reading file ("+basePath+instanceToPermutePath+"): "+ e.getMessage());
+                writer.write(";;; Error reading file ("+basePath+ fileName +"): "+ e.getMessage());
             } catch (IOException ex) {
                 e.printStackTrace();
             }
@@ -37,7 +39,7 @@ public class Permutator
         }
         for (Permutation permutation : permutations) {
             try {
-                Writer.writePermutation(permutation);
+                writer.writePermutation(permutation);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -61,7 +63,7 @@ public class Permutator
             newRows.add(i);
 
         if (!permuteRows && !permuteCols)
-            return new Permutation(new Instance(instance.instanceName, instance.getInputMatrix()),basePath+instanceToPermutePath, newColumns, newRows);
+            return new Permutation(new Instance(instance.instanceName, instance.getInputMatrix()),basePath+ fileName, newColumns, newRows);
 
         if (permuteCols)
             Collections.shuffle(newColumns, rand);
@@ -81,6 +83,6 @@ public class Permutator
         Instance newInstance = new Instance(instance.instanceName, newN);
         //System.out.println(instance.inputMatrixToString());
         //System.out.println(newInstance.inputMatrixToString());
-        return new Permutation(newInstance, basePath+instanceToPermutePath, newColumns, newRows);
+        return new Permutation(newInstance, basePath+ fileName, newColumns, newRows);
     }
 }

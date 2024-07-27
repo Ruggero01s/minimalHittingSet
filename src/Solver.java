@@ -2,9 +2,15 @@ import java.util.*;
 
 public class Solver {
 
+    public static final double NANO_TO_MILLI_RATE = 1000000.000;
     public List<Hypothesis> all = new ArrayList<>();
+    Hypothesis prevh2i;
+    int prevh2iIndex;
+    Hypothesis prevh2f;
+    int prevh2fIndex;
 
-    public List<Hypothesis> solve(Instance instance) {
+
+    public void solve(Instance instance) {
         long startTime = System.currentTimeMillis();
         instance.generateInputMatrix1();
         Hypothesis h0 = new Hypothesis(Collections.nCopies(instance.getInputMatrix1().size(), 0));
@@ -12,16 +18,15 @@ public class Solver {
         List<Hypothesis> current = new ArrayList<>();
         current.add(h0);
         instance.getPerLevelHypothesis().add(1);
-        List<Hypothesis> solutions = new ArrayList<>();
         do {
-            long startLevelTimer = System.currentTimeMillis();
+            long startLevelTimer = System.nanoTime();
             List<Hypothesis> next = new ArrayList<>();
             for (int i = 0; i < current.size(); i++) {
                 Hypothesis h = current.get(i);
                 all.add(new Hypothesis(h));
                 //h.reCalcHitVector(instance);
                 if (h.isSolution()) {
-                    solutions.add(new Hypothesis(h));
+                    instance.getSolutions().add(new Hypothesis(h));
                     current.remove(i);
                     i--;
                 } else if (h.isNullSolution()) {
@@ -40,27 +45,37 @@ public class Solver {
                 }
                 instance.updateSpatialPerformance(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
             }
-            long endLevelTimer = System.currentTimeMillis();
-            instance.getPerLevelTime().add(((double) (endLevelTimer - startLevelTimer) / 1000.0));
+            long endLevelTimer = System.nanoTime();
+            instance.getPerLevelTime().add(((double) (endLevelTimer - startLevelTimer) / NANO_TO_MILLI_RATE));
             instance.getPerLevelHypothesis().add(next.size());
             instance.setMaxCardExplored(instance.getMaxCardExplored() + 1);
             current = next;
         }
         while (!current.isEmpty());
-        long endTime = System.currentTimeMillis();
-        instance.setTemporalPerformance(endTime - startTime);
-        return solutions;
+        long endTime = System.nanoTime();
+        instance.setTemporalPerformance((double)(endTime - startTime) / NANO_TO_MILLI_RATE);
     }
 
     private void removeAllBiggerHypothesis(List<Hypothesis> current, Hypothesis h2s) {
-        //todo tornare subarray
+        List<Hypothesis> toRemove = new ArrayList<>();
+        //todo replace with while se lo usiamo
         for (int i = 0; i < current.size(); i++) {
             if (current.get(i).isGreater(h2s)) {
-                current.remove(i);
-                i--;
-            }
+                toRemove.add(current.get(i));
+
+            } else break; // todo ha senso?
         }
-        //current.removeIf(hypothesis -> hypothesis.isGreater(h2s));
+        current.removeAll(toRemove);
+
+//        for (int i = 0; i < current.size() ; i++) {
+//            if (current.get(i).isGreater(h2s)) {
+//                current.remove(i);
+//                i--;
+//            } else break; // todo ha senso?
+//        }
+
+//        current.removeIf(hypothesis -> hypothesis.isGreater(h2s));
+
     }
 
     private List<Hypothesis> merge(List<Hypothesis> next, List<Hypothesis> hypotheses) {
@@ -99,8 +114,24 @@ public class Solver {
             Hypothesis h2i = h1.initialPredecessor(h);
             Hypothesis h2f = h1.finalPredecessor(h);
 
-            int h2iIndex = current.indexOf(h2i);
-            int h2fIndex = current.indexOf(h2f);
+            if (prevh2i == null) {
+                prevh2i = h2i;
+                prevh2iIndex = current.indexOf(h2i);
+            }
+            if (prevh2f == null){
+                prevh2f = h2f;
+                prevh2fIndex = current.indexOf(h2f);
+            }
+
+            //todo ottimizzare, ha senso questo? per evitare indexOf quando non necessario, ho paura di cosa succede quando ci sono removal però non avvengono qua
+            int h2iIndex;
+            int h2fIndex;
+            if (h2i.equals(prevh2i)) {
+                h2iIndex = prevh2iIndex;
+            }else h2iIndex = current.indexOf(h2i);
+            if (h2f.equals(prevh2f)) {
+                h2fIndex = prevh2fIndex;
+            }else h2fIndex = current.indexOf(h2f);;
 
             int counter = 0;
             if (h2iIndex > -1 && h2fIndex > -1) {
@@ -122,7 +153,6 @@ public class Solver {
                     current.get(hpIndex).propagate(h1);
                     counter++;
                 }
-                //todo check che sia effettivamente next
                 hpIndex += 1;
             }*/
 
