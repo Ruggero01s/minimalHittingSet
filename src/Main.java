@@ -6,7 +6,7 @@ import java.util.concurrent.*;
 
 public class Main {
 
-    private static final String fileName = "74L85.000.matrix";
+    private static final String fileName = "74L85.000.1.matrix";
     private static final String basePath ="benchmarks/currentBenchmarks";
 
 //    public static void main(String[] args)

@@ -1,3 +1,4 @@
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -136,7 +137,7 @@ public class Instance {
     public String perLevelTimeToString() {
         StringBuilder perLevelTimeString = new StringBuilder();
         for (int i = 0; i < perLevelTime.size(); i++) {
-            perLevelTimeString.append(i).append(" -> ").append(perLevelTime.get(i)).append("ms || ");
+            perLevelTimeString.append(i+1).append(" -> ").append(perLevelTime.get(i)).append(" ms || ");
         }
         return perLevelTimeString.toString().substring(0, perLevelTimeString.length() - 4);
     }
@@ -173,5 +174,9 @@ public class Instance {
 
     public void setInstanceName(String instanceName) {
         this.instanceName = instanceName;
+    }
+
+    public void setExecutionTime(double executionTime) {
+        this.executionTime = executionTime;
     }
 }

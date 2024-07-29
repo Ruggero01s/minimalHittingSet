@@ -46,13 +46,14 @@ public class Permutation extends Instance {
     }
 
     private List<Hypothesis> permuteSolutionsToOriginal() {
-        //todo check, mi sembra che non stia facendo giusto
         List<Hypothesis> newSolutions = new ArrayList<>();
         if (!newColumns.isEmpty()) {
             for (Hypothesis solution : solutions) {
                 ArrayList<Integer> newBinRep = new ArrayList<>();
-                for (Integer newColumn : newColumns) {
-                    newBinRep.add(solution.getBinaryRep().get(newColumn));
+                for (int i = 0; i < newColumns.size(); i++)
+                {
+                    int index = newColumns.indexOf(i);
+                    newBinRep.add(solution.getBinaryRep().get(index));
                 }
                 newSolutions.add(new Hypothesis(newBinRep));
             }

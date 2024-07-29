@@ -41,24 +41,18 @@ public class Writer {
         writer.newLine();
         writer.write(";;; Suppressed columns: " + instance.emptyColumnsToString());
         writer.newLine();
-        writer.write(";;; Solutions found: " + instance.getSolutions().size());
-        writer.newLine();
-        writer.write(";;; Solution cardinality: " + instance.calcMinMaxCard());
+        writer.write(";;; Number of explored Hypothesis: " + instance.getExploredHypothesis());
         writer.newLine();
         writer.write(";;; Number of generated Hypothesis per level: " + instance.perLevelHypotesisToString(interrupted));
+        writer.newLine();
+        writer.write(";;; Execution time: " + instance.getExecutionTime() + " ms");
         writer.newLine();
         writer.write(";;; Time taken at each level: " + instance.perLevelTimeToString());
         writer.newLine();
         writer.write(";;; Maximum spatial occupation: " + instance.getSpatialPerformance() / 1000 + " KB");
         writer.newLine();
-        if (!interrupted) {
-            writer.write(";;; Time elapsed during computation: " + instance.getTemporalPerformance() + " milliseconds");
-            writer.newLine();
-        }
-        if (interrupted) {
-            writer.write(";;; Cardinality reached during exploration: " + instance.getMaxCardExplored());
-            writer.newLine();
-        }
+        writer.write(";;; Solutions found: " + instance.getSolutions().size() +" || Cardinality: " + instance.calcMinMaxCard());
+        writer.newLine();
     }
 
     private void writeSolution(Instance instance) throws IOException {

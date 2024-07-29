@@ -9,6 +9,11 @@ public class Initializer {
     private Instance instance;
     boolean finished = false;
     Writer writer;
+    long startTime;
+    long endTime;
+
+    public static final double NANO_TO_MILLI_RATE = 1000000.000;
+
 
     public Initializer(String basePath, String fileName) {
         this.basePath = basePath;
@@ -18,6 +23,7 @@ public class Initializer {
 
     public void start() {
         try {
+            startTime = System.nanoTime();
             instance = Reader.readInstance(basePath, fileName);
         } catch (IOException e) {
             try {
@@ -44,9 +50,10 @@ public class Initializer {
         computationThread.start();
 
         while (computationThread.isAlive()) {
-            //continue;
+            continue;
         }
-
+        endTime = System.nanoTime();
+        instance.setExecutionTime((double)(endTime-startTime)/NANO_TO_MILLI_RATE);
         try {
             writer.writeOut(instance, false);
         } catch (IOException e) {
@@ -64,7 +71,11 @@ public class Initializer {
                 int input = reader.read();
                 if (input == 'q') {
                     computationThread.interrupt();
+                    endTime = System.nanoTime();
+                    instance.setExecutionTime((double)(endTime-startTime)/NANO_TO_MILLI_RATE);
                     writer.writeOut(instance, true);
+
+
                     System.out.println("Stopping computation...");
                     System.exit(130);
                     break;
