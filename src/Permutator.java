@@ -65,8 +65,9 @@ public class Permutator
         if (!permuteRows && !permuteCols)
             return new Permutation(new Instance(instance.instanceName, instance.getInputMatrix()),basePath+ fileName, newColumns, newRows);
 
-        if (permuteCols)
+        if (permuteCols) {
             Collections.shuffle(newColumns, rand);
+        }
 
         if (permuteRows)
             Collections.shuffle(newRows, rand);

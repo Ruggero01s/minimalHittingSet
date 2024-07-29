@@ -48,7 +48,8 @@ public class Permutation extends Instance {
     private List<Hypothesis> permuteSolutionsToOriginal() {
         List<Hypothesis> newSolutions = new ArrayList<>();
         if (!newColumns.isEmpty()) {
-            for (Hypothesis solution : solutions) {
+            for (Hypothesis solution : solutions)
+            {
                 ArrayList<Integer> newBinRep = new ArrayList<>();
                 for (int i = 0; i < newColumns.size(); i++)
                 {

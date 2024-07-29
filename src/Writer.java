@@ -65,7 +65,7 @@ public class Writer {
     }
 
     public void writePermutation(Permutation permutation) throws IOException {
-        String permOutPath = permutationsPath + permutation.instanceName;
+        String permOutPath = permutationsPath + permutation.getInstanceName();
         BufferedWriter permutationWriter = new BufferedWriter(new FileWriter(permOutPath));
         permutationWriter.write(";;; Permutation of: ''" + permutation.getOriginInstance()+"''");
         permutationWriter.newLine();

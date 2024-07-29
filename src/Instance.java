@@ -3,19 +3,40 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Instance {
-    String instanceName;
+public class Instance
+{
+    protected String instanceName;
 
-    List<List<Integer>> inputMatrix = new ArrayList<>();
+    protected List<List<Integer>> inputMatrix = new ArrayList<>();
 
-    List<List<Integer>> inputMatrix1 = new ArrayList<>();
+    protected List<List<Integer>> inputMatrix1 = new ArrayList<>();
 
-    List<Hypothesis> solutions = new ArrayList<>();
+    protected List<Hypothesis> solutions = new ArrayList<>();
 
-    List<Integer> perLevelHypothesis = new ArrayList<>();
-    List<Double> perLevelTime = new ArrayList<>();
+    protected List<Integer> perLevelHypothesis = new ArrayList<>();
+    protected List<Double> perLevelTime = new ArrayList<>();
 
-    List<Integer> emptyColumns = new ArrayList<>();
+    protected List<Integer> emptyColumns = new ArrayList<>();
+
+    public double getExecutionTime() {
+        return executionTime;
+    }
+
+    public BigInteger getExploredHypothesis() {
+        return exploredHypothesis;
+    }
+
+    public void setExploredHypotesis(BigInteger exploredHypothesis) {
+        this.exploredHypothesis = exploredHypothesis;
+    }
+
+    protected double executionTime;
+
+    protected BigInteger exploredHypothesis = BigInteger.valueOf(1);
+
+    public List<Integer> getEmptyColumns() {
+        return emptyColumns;
+    }
 
     public double getTemporalPerformance() {
         return temporalPerformance;
@@ -154,7 +175,8 @@ public class Instance {
         return perLevelHypothesis;
     }
 
-    public void setPerLevelHypothesis(List<Integer> perLevelHypothesis) {
+    public void setPerLevelHypothesis(List<Integer> perLevelHypothesis)
+    {
         this.perLevelHypothesis = new ArrayList<>(perLevelHypothesis);
 
     }

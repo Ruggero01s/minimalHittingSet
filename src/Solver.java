@@ -1,7 +1,8 @@
 import java.math.BigInteger;
 import java.util.*;
 
-public class Solver {
+public class Solver
+{
 
     public static final double NANO_TO_MILLI_RATE = 1000000.000;
 
@@ -10,8 +11,6 @@ public class Solver {
         instance.generateInputMatrix1();
         Hypothesis h0 = new Hypothesis(Collections.nCopies(instance.getInputMatrix1().size(), 0));
         setFields(instance, h0);
-        List<Hypothesis> current = new ArrayList<>();
-        current.add(h0);
         instance.getPerLevelHypothesis().add(1);
         List<Hypothesis>  current = generateSingletons(instance, h0);
         instance.getPerLevelHypothesis().add(current.size());
@@ -19,7 +18,8 @@ public class Solver {
         {
             long startLevelTimer = System.nanoTime();
             List<Hypothesis> next = new ArrayList<>();
-            for (int i = 0; i < current.size(); i++) {
+            for (int i = 0; i < current.size(); i++)
+            {
                 Hypothesis h = current.get(i);
                 instance.setExploredHypotesis(instance.getExploredHypothesis().add(BigInteger.valueOf(1)));
                 if (h.isSolution())
@@ -62,16 +62,6 @@ public class Solver {
             i++;
         }
         current.removeAll(toRemove);
-
-//        for (int i = 0; i < current.size() ; i++) {
-//            if (current.get(i).isGreater(h2s)) {
-//                current.remove(i);
-//                i--;
-//            } else break; // todo ha senso?
-//        }
-
-//        current.removeIf(hypothesis -> hypothesis.isGreater(h2s));
-
     }
 
     private void merge(List<Hypothesis> next, List<Hypothesis> hypotheses) {
@@ -101,26 +91,8 @@ public class Solver {
             h.propagate(h1);
             Hypothesis h2i = h1.initialPredecessor(h);
             Hypothesis h2f = h1.finalPredecessor(h);
-
-            if (prevh2i == null) {
-                prevh2i = h2i;
-                prevh2iIndex = current.indexOf(h2i);
-            }
-            if (prevh2f == null){
-                prevh2f = h2f;
-                prevh2fIndex = current.indexOf(h2f);
-            }
-
-            //todo ottimizzare, ha senso questo? per evitare indexOf quando non necessario, ho paura di cosa succede quando ci sono removal però non avvengono qua
-            int h2iIndex;
-            int h2fIndex;
-            if (h2i.equals(prevh2i)) {
-                h2iIndex = prevh2iIndex;
-            }else h2iIndex = current.indexOf(h2i);
-            if (h2f.equals(prevh2f)) {
-                h2fIndex = prevh2fIndex;
-            }else h2fIndex = current.indexOf(h2f);;
-
+            int h2iIndex = findInitial(current, h2i);
+            int h2fIndex = findFinal(current, h2iIndex, h2f);
             int counter = 0;
             if (h2iIndex > -1 && h2fIndex > -1) {
                 for (int j = h2iIndex; j <= h2fIndex; j++) {
@@ -130,20 +102,6 @@ public class Solver {
                     }
                 }
             }
-
-            /*int hpIndex = current.indexOf(hp);
-            //System.out.println("hp index: " + hpIndex);
-            //System.out.println("h2f index: " + h2fIndex);
-            //System.out.println("h2i index: " + h2iIndex);
-                //(h2i.isGreaterOrEqual(hp)) && (hp.isGreaterOrEqual(h2f))
-            while (hpIndex >= h2iIndex && hpIndex <= h2fIndex) {
-                if (current.get(hpIndex).hammingDist(h1) == 1) {
-                    current.get(hpIndex).propagate(h1);
-                    counter++;
-                }
-                hpIndex += 1;
-            }*/
-
             if (counter == h.cardinality())
                 children.add(h1);
         }
