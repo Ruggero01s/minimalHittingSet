@@ -105,7 +105,8 @@ public class Hypothesis
 
     public void propagate(Hypothesis h1)
     {
-        for (int i = 0; i < this.hitVector.size(); i++) {
+        int hitVectorSize = this.hitVector.size();
+        for (int i = 0; i < hitVectorSize; i++) {
             if (this.hitVector.get(i) == 1)
                 h1.hitVector.set(i, 1);
         }
@@ -114,7 +115,8 @@ public class Hypothesis
     public int hammingDist(Hypothesis h)
     {
         int distance = 0;
-        for (int i = 0; i < h.binaryRep.size(); i++)
+        int binaryRepSize = h.binaryRep.size();
+        for (int i = 0; i < binaryRepSize; i++)
             if (!h.binaryRep.get(i).equals(this.binaryRep.get(i)))
                 distance++;
 
@@ -148,7 +150,8 @@ public class Hypothesis
         Hypothesis possiblePredecessor = new Hypothesis(this.binaryRep);
         boolean first = true;
         Hypothesis secondPossiblePredecessor = new Hypothesis(this.binaryRep);
-        for(int i=0; i<possiblePredecessor.getBinaryRep().size(); i++)
+        int binaryRepSize = possiblePredecessor.getBinaryRep().size();
+        for(int i=0; i<binaryRepSize; i++)
         {
             if(possiblePredecessor.getBinaryRep().get(i)==1 && first)
             {

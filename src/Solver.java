@@ -19,7 +19,8 @@ public class Solver
         {
             long startLevelTimer = System.nanoTime();
             List<Hypothesis> next = new ArrayList<>();
-            for (int i = 0; i < current.size(); i++)
+            int currentSize = current.size();
+            for (int i = 0; i < currentSize; i++)
             {
                 Hypothesis h = current.get(i);
                 instance.setExploredHypotesis(instance.getExploredHypothesis().add(BigInteger.valueOf(1)));
@@ -28,6 +29,7 @@ public class Solver
                     instance.getSolutions().add(new Hypothesis(h));
                     current.remove(i);
                     i--;
+                    currentSize--;
                 }
                 else if (h.getBinaryRep().indexOf(1) != 0)
                 {
@@ -59,7 +61,8 @@ public class Solver
     private int removeAllBiggerHypothesis(List<Hypothesis> current, Hypothesis h2s) {
         List<Hypothesis> toRemove = new ArrayList<>();
         int i = 0;
-        while (current.get(i).isGreater(h2s)) {
+        while (current.get(i).isGreater(h2s))
+        {
             toRemove.add(current.get(i));
             i++;
         }
@@ -67,11 +70,15 @@ public class Solver
         return i;
     }
 
-    private void merge(List<Hypothesis> next, List<Hypothesis> hypotheses) {
+    private void merge(List<Hypothesis> next, List<Hypothesis> hypotheses)
+    {
         int lastIndex = 0;
-        for (Hypothesis hypothesis : hypotheses) {
+        for (Hypothesis hypothesis : hypotheses)
+        {
             boolean inserted = false;
-            for (int i = lastIndex; i < next.size(); i++) {
+            int nextSize = next.size();
+            for (int i = lastIndex; i < nextSize; i++)
+            {
                 if (!next.get(i).isGreater(hypothesis)) {
                     inserted = true;
                     lastIndex = i + 1;
@@ -85,9 +92,12 @@ public class Solver
     }
 
 
-    private List<Hypothesis> generateChildren(Instance instance, List<Hypothesis> current, Hypothesis h) {
+    private List<Hypothesis> generateChildren(Instance instance, List<Hypothesis> current, Hypothesis h)
+    {
         List<Hypothesis> children = new ArrayList<>();
-        for (int i = 0; i < h.getBinaryRep().indexOf(1); i++) {
+        int firstIndexOf1InH = h.getBinaryRep().indexOf(1);
+        for (int i = 0; i < firstIndexOf1InH; i++)
+        {
             Hypothesis h1 = new Hypothesis(h.getBinaryRep());
             h1.getBinaryRep().set(i, 1);
             setFields(instance, h1);
@@ -97,9 +107,12 @@ public class Solver
             int h2iIndex = findInitial(current, h2i);
             int h2fIndex = findFinal(current, h2iIndex, h2f);
             int counter = 0;
-            if (h2iIndex > -1 && h2fIndex > -1) {
-                for (int j = h2iIndex; j <= h2fIndex; j++) {
-                    if (current.get(j).hammingDist(h1) == 1) {
+            if (h2iIndex > -1 && h2fIndex > -1)
+            {
+                for (int j = h2iIndex; j <= h2fIndex; j++)
+                {
+                    if (current.get(j).hammingDist(h1) == 1)
+                    {
                         current.get(j).propagate(h1);
                         counter++;
                     }
@@ -111,9 +124,13 @@ public class Solver
         return children;
     }
 
-    private int findFinal(List<Hypothesis> current, int h2iIndex, Hypothesis h2f) {
-        if (h2iIndex != -1) {
-            for (int i = h2iIndex; i < current.size(); i++) {
+    private int findFinal(List<Hypothesis> current, int h2iIndex, Hypothesis h2f)
+    {
+        if (h2iIndex != -1)
+        {
+            int currentSize = current.size();
+            for (int i = h2iIndex; i < currentSize; i++)
+            {
                 if (current.get(i).equals(h2f))
                     return i;
             }
@@ -127,7 +144,9 @@ public class Solver
 
     private List<Hypothesis> generateSingletons(Instance instance, Hypothesis h) {
         List<Hypothesis> children = new ArrayList<>();
-        for (int i = 0; i < instance.getInputMatrix1().size(); i++) {
+        int matrix1Size = instance.getInputMatrix1().size();
+        for (int i = 0; i < matrix1Size; i++)
+        {
             Hypothesis h1 = new Hypothesis(h.getBinaryRep());
             h1.getBinaryRep().set(i, 1);
             setFieldsSingleton(instance, h1);
