@@ -78,8 +78,8 @@ public class Initializer {
             long time = (endTime - startTime);
             if (timeLimit){
                 if (time / NANO_TO_SECONDS_RATE >= MAX_TIME_IN_SECONDS) {
-                    System.out.println("Max time reached, stopping computation...");
                     instance.setExecutionTime((double) time / NANO_TO_MILLI_RATE);
+                    System.out.println("Max time reached, stopping computation...");
                     writer.writeOut(instance, true);
                     System.exit(130);
                     break;
@@ -89,9 +89,8 @@ public class Initializer {
                 int input = reader.read();
                 if (input == 'q') {
                     computationThread.interrupt();
-                    endTime = System.nanoTime();
-                    System.out.println("Stopping computation...");
                     instance.setExecutionTime((double) time / NANO_TO_MILLI_RATE);
+                    System.out.println("Stopping computation...");
                     writer.writeOut(instance, true);
                     System.exit(130);
                     break;

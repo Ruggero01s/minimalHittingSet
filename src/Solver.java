@@ -31,7 +31,7 @@ public class Solver
                     i--;
                     currentSize--;
                 }
-                else if (h.getBinaryRep().indexOf(1) != 0)
+                else if (h.getBinaryRep().indexOf(1) != 0 && h.cardinality() < instance.getInputMatrix1().getFirst().size()) //todo aggiunto questo così non generiamo neanche i figli che è tempo buttato
                 {
                     Hypothesis h2s = h.globalInitial();
                     int removeSize = removeAllBiggerHypothesis(current, h2s);
@@ -43,14 +43,12 @@ public class Solver
                     else
                         System.out.println("fuk"); //todo remove debug
                 }
+                instance.updateSpatialPerformance(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
             }
             long endLevelTimer = System.nanoTime();
             instance.getPerLevelTime().add(((double) (endLevelTimer - startLevelTimer) / NANO_TO_MILLI_RATE));
-            if(!next.isEmpty())
-                if (next.getFirst().cardinality() > instance.getInputMatrix1().getFirst().size())
-                    break;
             instance.getPerLevelHypothesis().add(next.size());
-            instance.updateSpatialPerformance(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
+
             current = next;
         }
         while (!current.isEmpty());

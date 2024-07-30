@@ -10,10 +10,10 @@ public class Permutator
     private static boolean permuteCols = true;
 
     private static String basePath = "benchmarks/benchmarks1/";
-    private static String fileName = "74L85.000.matrix";
+    private static String fileName = "74L85.020.matrix";
     private static Instance instanceToPermute;
     private static List<Permutation> permutations = new ArrayList<>();
-    private static final int numberOfPermutations = 10;
+    private static final int numberOfPermutations = 20;
     private static Writer writer;
 
     public static void setUp(boolean permRows, boolean permCols){
@@ -47,7 +47,8 @@ public class Permutator
     }
 
     private static String generateName(Permutation perm, int i) {
-        return perm.getOriginInstance().substring(perm.getOriginInstance().lastIndexOf("/")+1, perm.getOriginInstance().lastIndexOf(".")+1)+(i+1)+".matrix";
+        if (i+1<10) return perm.getOriginInstance().substring(perm.getOriginInstance().lastIndexOf("/")+1, perm.getOriginInstance().lastIndexOf(".")+1)+"0"+(i+1)+".matrix";
+        else return perm.getOriginInstance().substring(perm.getOriginInstance().lastIndexOf("/")+1, perm.getOriginInstance().lastIndexOf(".")+1)+(i+1)+".matrix";
     }
 
     public static Permutation permute(Instance instance)
@@ -82,8 +83,6 @@ public class Permutator
             newN.add(newNRow);
         }
         Instance newInstance = new Instance(instance.instanceName, newN);
-        //System.out.println(instance.inputMatrixToString());
-        //System.out.println(newInstance.inputMatrixToString());
         return new Permutation(newInstance, basePath+ fileName, newColumns, newRows);
     }
 }
