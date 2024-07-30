@@ -95,7 +95,8 @@ public class Hypothesis
     {
         int cardinality = 0;
 
-        for (int i = 0; i < this.binaryRep.size(); i++)
+        int binaryRepSize = this.binaryRep.size();
+        for (int i = 0; i < binaryRepSize; i++)
             if(this.binaryRep.get(i) == 1)
                 cardinality++;
 

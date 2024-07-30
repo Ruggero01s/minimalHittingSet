@@ -3,8 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Instance
-{
+public class Instance {
     protected String instanceName;
 
     protected List<List<Integer>> inputMatrix = new ArrayList<>();
@@ -158,7 +157,7 @@ public class Instance
     public String perLevelTimeToString() {
         StringBuilder perLevelTimeString = new StringBuilder();
         for (int i = 0; i < perLevelTime.size(); i++) {
-            perLevelTimeString.append(i+1).append(" -> ").append(perLevelTime.get(i)).append(" ms || ");
+            perLevelTimeString.append(i).append(" -> ").append(perLevelTime.get(i)).append(" ms || ");
         }
         return perLevelTimeString.toString().substring(0, perLevelTimeString.length() - 4);
     }
@@ -175,8 +174,7 @@ public class Instance
         return perLevelHypothesis;
     }
 
-    public void setPerLevelHypothesis(List<Integer> perLevelHypothesis)
-    {
+    public void setPerLevelHypothesis(List<Integer> perLevelHypothesis) {
         this.perLevelHypothesis = new ArrayList<>(perLevelHypothesis);
 
     }

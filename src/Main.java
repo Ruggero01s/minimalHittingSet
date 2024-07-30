@@ -8,6 +8,7 @@ public class Main {
 
     private static final String fileName = "74L85.000.1.matrix";
     private static final String basePath ="benchmarks/currentBenchmarks";
+    private static final long MAX_TIME_IN_SECONDS = -1;
 
 //    public static void main(String[] args)
 //    {
@@ -47,7 +48,7 @@ public class Main {
             File[] filesList = directory.listFiles();
             if (filesList != null) {
                 for (File file : filesList) {
-                    Initializer initializer = new Initializer(basePath+"/", file.getName());
+                    Initializer initializer = new Initializer(basePath+"/", file.getName(), MAX_TIME_IN_SECONDS);
                     initializer.start();
                 }
             }
@@ -55,6 +56,7 @@ public class Main {
         System.exit(0);
     }
 }
+//todo dump per crash
 
 
 //todo check soluzioni delle permutazioni

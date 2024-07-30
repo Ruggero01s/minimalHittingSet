@@ -4,7 +4,7 @@ import java.util.*;
 public class Solver
 {
 
-    public static final double NANO_TO_MILLI_RATE = 1000000.000;
+    public static final double NANO_TO_MILLI_RATE = 1e6;
 
     public void solve(Instance instance) {
         long startTime = System.nanoTime();
@@ -13,6 +13,7 @@ public class Solver
         setFields(instance, h0);
         instance.getPerLevelHypothesis().add(1);
         List<Hypothesis>  current = generateSingletons(instance, h0);
+        instance.getPerLevelTime().add(((double) (System.nanoTime() - startTime) / NANO_TO_MILLI_RATE));
         instance.getPerLevelHypothesis().add(current.size());
         do
         {
@@ -31,22 +32,23 @@ public class Solver
                 else if (h.getBinaryRep().indexOf(1) != 0)
                 {
                     Hypothesis h2s = h.globalInitial();
-
-                    int preRemoveLength = current.size();
-                    removeAllBiggerHypothesis(current, h2s);
-                    int postRemoveLength = current.size();
-                    i = i - (preRemoveLength - postRemoveLength);
-
+                    int removeSize = removeAllBiggerHypothesis(current, h2s);
+                    i -= removeSize;
+                    currentSize-=removeSize;
                     Hypothesis hp = current.getFirst();
                     if (!hp.equals(h))
                         merge(next, generateChildren(instance, current, h));
+                    else
+                        System.out.println("fuk"); //todo remove debug
                 }
-                instance.updateSpatialPerformance(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
             }
             long endLevelTimer = System.nanoTime();
             instance.getPerLevelTime().add(((double) (endLevelTimer - startLevelTimer) / NANO_TO_MILLI_RATE));
+            if(!next.isEmpty())
+                if (next.getFirst().cardinality() > instance.getInputMatrix1().getFirst().size())
+                    break;
             instance.getPerLevelHypothesis().add(next.size());
-            instance.setMaxCardExplored(instance.getMaxCardExplored() + 1);
+            instance.updateSpatialPerformance(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
             current = next;
         }
         while (!current.isEmpty());
@@ -54,7 +56,7 @@ public class Solver
         instance.setTemporalPerformance((double) (endTime - startTime) / NANO_TO_MILLI_RATE);
     }
 
-    private void removeAllBiggerHypothesis(List<Hypothesis> current, Hypothesis h2s) {
+    private int removeAllBiggerHypothesis(List<Hypothesis> current, Hypothesis h2s) {
         List<Hypothesis> toRemove = new ArrayList<>();
         int i = 0;
         while (current.get(i).isGreater(h2s)) {
@@ -62,6 +64,7 @@ public class Solver
             i++;
         }
         current.removeAll(toRemove);
+        return i;
     }
 
     private void merge(List<Hypothesis> next, List<Hypothesis> hypotheses) {

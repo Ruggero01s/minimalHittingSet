@@ -24,7 +24,7 @@ public class Writer {
 
     private void writeSummary(Instance instance, boolean interrupted) throws IOException {
         if (interrupted) {
-            writer.write(";;; The program was interrupted by the user.");
+            writer.write(";;; The program was interrupted either by the user or by time limit.");
             writer.newLine();
         }
         if (instance instanceof Permutation permutation) {
