@@ -1,6 +1,5 @@
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -142,14 +141,8 @@ public class Instance {
      * @return the string representation of the per-level hypotheses
      */
     public String perLevelHypothesesToString(boolean interrupted) {
-        int c = 1;
-        if (interrupted) {
-            c = 0;
-        }
-
         StringBuilder perLevelHypotesisString = new StringBuilder();
-        // todo cosa era -c?
-        for (int i = 0; i < perLevelHypothesis.size() - c; i++) {
+        for (int i = 0; i < perLevelHypothesis.size(); i++) {
             perLevelHypotesisString.append(i).append(" -> ").append(perLevelHypothesis.get(i)).append(" || ");
         }
         return perLevelHypotesisString.substring(0, perLevelHypotesisString.length() - 4);
@@ -171,11 +164,6 @@ public class Instance {
 
     public List<Hypothesis> getSolutions() {
         return solutions;
-    }
-
-
-    public void setSolutions(List<Hypothesis> solutions) {
-        this.solutions = new ArrayList<>(solutions);
     }
 
 

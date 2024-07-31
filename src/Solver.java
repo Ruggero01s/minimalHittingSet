@@ -6,7 +6,8 @@ public class Solver
 
     public static final double NANO_TO_MILLI_RATE = 1e6;
 
-    public void solve(Instance instance) {
+    public void solve(Instance instance)
+    {
         long startTime = System.nanoTime();
 
         // Generate M'
@@ -49,7 +50,7 @@ public class Solver
                 }
                 // First condition is that h must have at least a leading 0 to generate children
                 // Second condition is the skip the generation of children with cardinality bigger than |N| as they will never be MHS
-                else if (h.getBinaryRep().getFirst() == 0 && h.cardinality() < instance.getInputMatrix1().getFirst().size()) //todo aggiunto questo così non generiamo neanche i figli che è tempo buttato
+                else if (h.getBinaryRep().getFirst() == 0 && h.cardinality() < instance.getInputMatrix1().getFirst().size())
                 {
                     Hypothesis h2s = h.globalInitial();
 
@@ -61,9 +62,11 @@ public class Solver
                     Hypothesis hp = current.getFirst();
 
                     //todo scriver cosa fa sto coso
+                    // in teoria serve per non chiamare inutilmente generateChildren perchè il first di current di sicuro non genererà figli. (potrebbe però averli generati)
                     if (!hp.equals(h))
                         // Generate h children and add them to next keeping the list sorted
                         //todo cosa succede se invece di sortare ogni volta lo sorto semplicemente prima di assegnarlo a current? potrebbe essere più efficiente
+                        // In teoria non cambia niente perché l'insert sort é già molto efficiente, in caso si potrebbe provare
                         merge(next, generateChildren(instance, current, h));
                 }
 
@@ -72,7 +75,10 @@ public class Solver
             }
             long endLevelTimer = System.nanoTime();
             instance.getPerLevelTime().add(((double) (endLevelTimer - startLevelTimer) / NANO_TO_MILLI_RATE));
-            instance.getPerLevelHypotheses().add(next.size());
+            int nextSize = next.size();
+            if(nextSize>0)
+                // Saving the hypotheses per level
+                instance.getPerLevelHypotheses().add(nextSize);
 
             current = next;
         }
@@ -128,7 +134,10 @@ public class Solver
                 }
             }
             if (!inserted)
+            {
                 next.add(hypothesis);
+                lastIndex = next.size(); //todo in teoria con questa riga dovrebbe essere ancora più efficiente.
+            }
         }
     }
 
@@ -188,9 +197,9 @@ public class Solver
             }
 
             // If the counter equals the cardinality of the current hypothesis, add the new hypothesis to the children list
-            if (counter == h.cardinality()) {
+            if (counter == h.cardinality())
                 children.add(h1);
-            }
+
         }
 
         // Return the list of generated child hypotheses

@@ -76,13 +76,13 @@ public class Reader {
         line = line.replaceAll("\\s+", "");
         char[] chars = line.toCharArray();
 
-        for (int i = 0; i < chars.length; i++) {
-            if (chars[i] == '-')
-                return row;
-            else {
-                row.add(Character.getNumericValue(chars[i]));
-            }
-        }
+		for (char aChar : chars)
+		{
+			if (aChar=='-')
+				return row;
+			else
+				row.add(Character.getNumericValue(aChar));
+		}
 
         throw new IOException();
     }
@@ -100,7 +100,8 @@ public class Reader {
             String value = matcher.group(2);
 
             // Assicura che la lista abbia abbastanza spazio per l'indice corrente
-            while (resultList.size() <= index) {
+            while (resultList.size() <= index)
+            {
                 resultList.add(null);
             }
 

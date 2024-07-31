@@ -2,7 +2,8 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class Writer {
+public class Writer
+{
     private static final String resultPath = "results/";
     private static final String permutationsPath = "permutations/";
     private BufferedWriter writer;
@@ -26,6 +27,8 @@ public class Writer {
     private void writeSummary(Instance instance, boolean interrupted) throws IOException {
         if (interrupted) {
             writer.write(";;; The program was interrupted either by the user or by time limit.");
+            writer.newLine();
+            writer.write(";;; The program was exploring the level N: "+ Integer.toString(instance.getPerLevelHypotheses().size()-1)); // todo aggiunta sta riga
             writer.newLine();
         }
         if (instance instanceof Permutation permutation) {
