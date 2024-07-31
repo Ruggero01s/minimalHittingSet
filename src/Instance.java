@@ -1,74 +1,48 @@
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-
+/**
+ * The `Instance` class represents an instance of a problem with input matrices,
+ * hypotheses, and various metrics related to the problem-solving process.
+ */
 public class Instance {
     protected String instanceName;
-
-    protected List<List<Integer>> inputMatrix = new ArrayList<>();
-
+    protected List<List<Integer>> inputMatrix;
     protected List<List<Integer>> inputMatrix1 = new ArrayList<>();
-
     protected List<Hypothesis> solutions = new ArrayList<>();
-
     protected List<Integer> perLevelHypothesis = new ArrayList<>();
     protected List<Double> perLevelTime = new ArrayList<>();
-
     protected List<Integer> emptyColumns = new ArrayList<>();
-
-    public double getExecutionTime() {
-        return executionTime;
-    }
-
-    public BigInteger getExploredHypothesis() {
-        return exploredHypothesis;
-    }
-
-    public void setExploredHypotesis(BigInteger exploredHypothesis) {
-        this.exploredHypothesis = exploredHypothesis;
-    }
-
     protected double executionTime;
-
-    protected BigInteger exploredHypothesis = BigInteger.valueOf(1);
-
-    public List<Integer> getEmptyColumns() {
-        return emptyColumns;
-    }
-
-    public double getTemporalPerformance() {
-        return temporalPerformance;
-    }
-
-    public void setTemporalPerformance(double temporalPerformance) {
-        this.temporalPerformance = temporalPerformance;
-    }
-
-    double temporalPerformance;
+    protected BigInteger exploredHypotheses = BigInteger.valueOf(1);
     long spatialPerformance;
 
-    int maxCardExplored = 0;
-
+    /**
+     * Constructs an Instance with the specified name and input matrix.
+     *
+     * @param instanceName the name of the instance
+     * @param input the input matrix
+     */
     public Instance(String instanceName, List<List<Integer>> input) {
         this.instanceName = instanceName;
         this.inputMatrix = new ArrayList<>(input);
     }
 
-    public Instance(Instance instance) {
-        this.instanceName = instance.instanceName;
-        this.inputMatrix = new ArrayList<>(instance.inputMatrix);
-    }
-
+    /**
+     * Generates the input matrix1 by filtering rows from the input matrix that contain at least one '1'.
+     * Populates the empty columns list with indices of columns that do not contain any '1'.
+     */
     public void generateInputMatrix1() {
         for (int i = 0; i < inputMatrix.size(); i++) {
             if (inputMatrix.get(i).contains(1)) {
                 inputMatrix1.add(inputMatrix.get(i));
-            } else
+            } else {
                 emptyColumns.add(i);
+            }
         }
     }
-
 
     public List<List<Integer>> getInputMatrix() {
         return inputMatrix;
@@ -78,22 +52,22 @@ public class Instance {
         return inputMatrix1;
     }
 
-    public int getMaxCardExplored() {
-        return maxCardExplored;
-    }
-
-    public void setMaxCardExplored(int maxCardExplored) {
-        this.maxCardExplored = maxCardExplored;
-    }
-
     public List<Double> getPerLevelTime() {
         return perLevelTime;
     }
 
+    /**
+     * Converts the solution hypotheses to a string representation, including any empty columns.
+     *
+     * @return the string representation of the solution hypotheses
+     */
     public String solutionToString() {
-        for (Integer column : emptyColumns)
-            for (Hypothesis solution : solutions)
+        // Pads the solutions with the empty columns from the original matrix
+        for (Integer column : emptyColumns) {
+            for (Hypothesis solution : solutions) {
                 solution.getBinaryRep().add(column, 0);
+            }
+        }
 
         StringBuilder solutionString = new StringBuilder();
         for (Hypothesis solution : solutions) {
@@ -106,6 +80,11 @@ public class Instance {
         return solutionString.toString();
     }
 
+    /**
+     * Converts the input matrix to a string representation.
+     *
+     * @return the string representation of the input matrix
+     */
     public String inputMatrixToString() {
         List<List<Integer>> inputMatrix = new ArrayList<>(Reader.invertMatrix(this.inputMatrix));
 
@@ -119,84 +98,130 @@ public class Instance {
         return stringBuilder.toString();
     }
 
+    /**
+     * Calculates and returns the minimum and maximum cardinality of the solution hypotheses.
+     *
+     * @return the string representation of the minimum and maximum cardinality
+     */
     public String calcMinMaxCard() {
         int min = Integer.MAX_VALUE;
         int max = -1;
         for (Hypothesis solution : solutions) {
             int card = solution.cardinality();
-            if (card < min)
+            if (card < min) {
                 min = card;
-            if (card > max)
+            }
+            if (card > max) {
                 max = card;
+            }
         }
-        if (max == -1 && min == Integer.MAX_VALUE)
+        if (max == -1 && min == Integer.MAX_VALUE) {
             return "Min: NaN  Max: NaN";
-        else
+        } else {
             return "Min: " + min + " Max: " + max;
+        }
     }
 
+    /**
+     * Converts the list of empty columns to a string representation.
+     *
+     * @return the string representation of the empty columns
+     */
     public String emptyColumnsToString() {
         StringBuilder emptyColumnsString = new StringBuilder();
-        for (int i = 0; i < emptyColumns.size(); i++) {
-            emptyColumnsString.append(emptyColumns.get(i) + 1).append(" ");
+        for (Integer emptyColumn : emptyColumns) {
+            emptyColumnsString.append(emptyColumn + 1).append(" ");
         }
         return emptyColumnsString.toString();
     }
 
-    public String perLevelHypotesisToString(boolean interrupted) {
+    /**
+     * Converts the per-level hypotheses to a string representation.
+     *
+     * @param interrupted indicates whether the process was interrupted
+     * @return the string representation of the per-level hypotheses
+     */
+    public String perLevelHypothesesToString(boolean interrupted) {
         int c = 1;
-        if (interrupted)
+        if (interrupted) {
             c = 0;
+        }
+
         StringBuilder perLevelHypotesisString = new StringBuilder();
+        // todo cosa era -c?
         for (int i = 0; i < perLevelHypothesis.size() - c; i++) {
             perLevelHypotesisString.append(i).append(" -> ").append(perLevelHypothesis.get(i)).append(" || ");
         }
-        return perLevelHypotesisString.toString().substring(0, perLevelHypotesisString.length() - 4);
+        return perLevelHypotesisString.substring(0, perLevelHypotesisString.length() - 4);
     }
 
+    /**
+     * Converts the per-level time to a string representation.
+     *
+     * @return the string representation of the per-level time
+     */
     public String perLevelTimeToString() {
         StringBuilder perLevelTimeString = new StringBuilder();
         for (int i = 0; i < perLevelTime.size(); i++) {
             perLevelTimeString.append(i).append(" -> ").append(perLevelTime.get(i)).append(" ms || ");
         }
-        return perLevelTimeString.toString().substring(0, perLevelTimeString.length() - 4);
+        return perLevelTimeString.substring(0, perLevelTimeString.length() - 4);
     }
+
 
     public List<Hypothesis> getSolutions() {
         return solutions;
     }
 
+
     public void setSolutions(List<Hypothesis> solutions) {
         this.solutions = new ArrayList<>(solutions);
     }
 
-    public List<Integer> getPerLevelHypothesis() {
+
+    public List<Integer> getPerLevelHypotheses() {
         return perLevelHypothesis;
     }
 
-    public void setPerLevelHypothesis(List<Integer> perLevelHypothesis) {
-        this.perLevelHypothesis = new ArrayList<>(perLevelHypothesis);
-
-    }
 
     public long getSpatialPerformance() {
         return spatialPerformance;
     }
 
+
     public void updateSpatialPerformance(long size) {
-        if (size > this.spatialPerformance)
+        if (size > this.spatialPerformance) {
             this.spatialPerformance = size;
+        }
     }
+
 
     public String getInstanceName() {
         return instanceName;
     }
 
+
     public void setInstanceName(String instanceName) {
         this.instanceName = instanceName;
     }
 
+
+    public double getExecutionTime() {
+        return executionTime;
+    }
+
+
     public void setExecutionTime(double executionTime) {
         this.executionTime = executionTime;
+    }
+
+
+    public BigInteger getExploredHypotheses() {
+        return exploredHypotheses;
+    }
+
+
+    public void setExploredHypotheses(BigInteger exploredHypotheses) {
+        this.exploredHypotheses = exploredHypotheses;
     }
 }

@@ -40,11 +40,15 @@ public class Initializer {
             }
         }
 
+
+        // initializing the two threads
+        //computation thread
         Thread computationThread = new Thread(() -> {
             Solver solver = new Solver();
             solver.solve(instance);
         });
 
+        //thread for interrupting by input and time limit
         Thread inputThread = new Thread(() -> {
             try {
                 checkForKeyPressAndTimeLimit(computationThread);
@@ -56,18 +60,22 @@ public class Initializer {
         inputThread.start();
         computationThread.start();
 
+
+        // Wait for computation to finish
         while (computationThread.isAlive()) {
             continue;
         }
         endTime = System.nanoTime();
         instance.setExecutionTime((double) (endTime - startTime) / NANO_TO_MILLI_RATE);
+
+        // Write output
         try {
             writer.writeOut(instance, false);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        // To stop the other thread
         finished = true;
-        return;
     }
 
     private void checkForKeyPressAndTimeLimit(Thread computationThread) throws IOException {

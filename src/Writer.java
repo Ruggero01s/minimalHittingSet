@@ -8,6 +8,7 @@ public class Writer {
     private BufferedWriter writer;
 
     public Writer(String name) {
+        // Create output name bt replacing .matrix with .mhs
         String fileName = name.substring(0, name.lastIndexOf(".")) + ".mhs";
         try {
             writer = new BufferedWriter(new FileWriter(resultPath + fileName));
@@ -41,9 +42,9 @@ public class Writer {
         writer.newLine();
         writer.write(";;; Suppressed columns: " + instance.emptyColumnsToString());
         writer.newLine();
-        writer.write(";;; Number of explored Hypothesis: " + instance.getExploredHypothesis());
+        writer.write(";;; Number of explored Hypotheses: " + instance.getExploredHypotheses());
         writer.newLine();
-        writer.write(";;; Number of generated Hypothesis per level: " + instance.perLevelHypotesisToString(interrupted));
+        writer.write(";;; Number of generated Hypotheses per level: " + instance.perLevelHypothesesToString(interrupted));
         writer.newLine();
         writer.write(";;; Execution time: " + instance.getExecutionTime() + " ms");
         writer.newLine();
