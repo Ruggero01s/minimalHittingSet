@@ -23,7 +23,7 @@ public class Solver
         instance.getPerLevelTime().add(((double) (System.nanoTime() - startTime) / NANO_TO_MILLI_RATE));
         instance.getPerLevelHypotheses().add(current.size());
 
-
+        Comparator<Hypothesis> comparator = Solver::compare;
         // Main cycle
         do
         {
@@ -65,9 +65,10 @@ public class Solver
                     // in teoria serve per non chiamare inutilmente generateChildren perchè il first di current di sicuro non genererà figli. (potrebbe però averli generati)
                     if (!hp.equals(h))
                         // Generate h children and add them to next keeping the list sorted
-                        //todo cosa succede se invece di sortare ogni volta lo sorto semplicemente prima di assegnarlo a current? potrebbe essere più efficiente
-                        // In teoria non cambia niente perché l'insert sort é già molto efficiente, in caso si potrebbe provare
-                        merge(next, generateChildren(instance, current, h));
+                        //todo scegliere sorting
+                        //merge(next, generateChildren(instance, current, h));
+                        // Adding all the generated children to next without sorting it.
+                        next.addAll(generateChildren(instance, current, h));
                 }
 
                 // Sampling for spatial performance benchmark
@@ -80,10 +81,12 @@ public class Solver
                 // Saving the hypotheses per level
                 instance.getPerLevelHypotheses().add(nextSize);
 
+            // Sorting and reversing the next list only before assign it to be more efficient.
+            next.sort(comparator);
+            next = next.reversed();
             current = next;
         }
         while (!current.isEmpty());
-        long endTime = System.nanoTime();
     }
 
     /**
@@ -139,6 +142,12 @@ public class Solver
                 lastIndex = next.size(); //todo in teoria con questa riga dovrebbe essere ancora più efficiente.
             }
         }
+    }
+
+    private static int compare(Hypothesis h1, Hypothesis h2) {
+        if (h1.equals(h2))
+            return 0;
+        return h1.isGreater(h2) ? 1 : -1;
     }
 
 

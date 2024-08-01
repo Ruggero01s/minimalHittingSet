@@ -28,7 +28,7 @@ public class Writer
         if (interrupted) {
             writer.write(";;; The program was interrupted either by the user or by time limit.");
             writer.newLine();
-            writer.write(";;; The program was exploring the level N: "+ Integer.toString(instance.getPerLevelHypotheses().size()-1)); // todo aggiunta sta riga
+            writer.write(";;; The program was exploring the level N: "+ (instance.getPerLevelHypotheses().size() - 1));
             writer.newLine();
         }
         if (instance instanceof Permutation permutation) {

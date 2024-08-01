@@ -44,8 +44,25 @@ public class Initializer {
         // initializing the two threads
         //computation thread
         Thread computationThread = new Thread(() -> {
-            Solver solver = new Solver();
-            solver.solve(instance);
+            try {
+                Solver solver = new Solver();
+                solver.solve(instance);
+            }
+            catch (Exception e)
+            {
+                System.out.println("An Exception occurred during execution: " + e.getMessage());
+                System.out.println("Printing partial results to file");
+                try
+                {
+                    writer.writeOut(instance,true);
+                }
+                catch (IOException ex)
+                {
+                    e.printStackTrace();
+                }
+            }
+
+
         });
 
         //thread for interrupting by input and time limit
