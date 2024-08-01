@@ -61,8 +61,6 @@ public class Solver
 
                     Hypothesis hp = current.getFirst();
 
-                    //todo scriver cosa fa sto coso
-                    // in teoria serve per non chiamare inutilmente generateChildren perchè il first di current di sicuro non genererà figli. (potrebbe però averli generati)
                     if (!hp.equals(h))
                         // Generate h children and add them to next keeping the list sorted
                         //todo scegliere sorting
@@ -139,7 +137,7 @@ public class Solver
             if (!inserted)
             {
                 next.add(hypothesis);
-                lastIndex = next.size(); //todo in teoria con questa riga dovrebbe essere ancora più efficiente.
+                lastIndex = next.size();
             }
         }
     }
