@@ -1,8 +1,7 @@
 import java.math.BigInteger;
 import java.util.*;
 
-public class Solver
-{
+public class Solver{
 
     public static final double NANO_TO_MILLI_RATE = 1e6;
 
@@ -66,7 +65,7 @@ public class Solver
                         //todo scegliere sorting
                         //merge(next, generateChildren(instance, current, h));
                         // Adding all the generated children to next without sorting it.
-                        next.addAll(generateChildren(instance, current, h));
+                        next.addAll(generateChildren(instance, current, h, i));
                 }
 
                 // Sampling for spatial performance benchmark
@@ -83,6 +82,7 @@ public class Solver
             next.sort(comparator);
             next = next.reversed();
             current = next;
+            System.out.println("Completed level " + instance.getPerLevelHypotheses().size());
         }
         while (!current.isEmpty());
     }
@@ -142,6 +142,12 @@ public class Solver
         }
     }
 
+    /**
+     * Method used to compare two hypotheses
+     * @param h1 first hypothesis
+     * @param h2 second hypothesis
+     * @return 1 if h1>h2, -1 se h2>h1, 0 se h1==h2
+     */
     private static int compare(Hypothesis h1, Hypothesis h2) {
         if (h1.equals(h2))
             return 0;
@@ -157,7 +163,7 @@ public class Solver
      * @param h the hypothesis to generate children from
      * @return a list of child hypotheses generated from the given hypothesis
      */
-    private List<Hypothesis> generateChildren(Instance instance, List<Hypothesis> current, Hypothesis h) {
+    private List<Hypothesis> generateChildren(Instance instance, List<Hypothesis> current, Hypothesis h, int hIndex) {
         // List to store the generated child hypotheses
         List<Hypothesis> children = new ArrayList<>();
 
@@ -183,17 +189,17 @@ public class Solver
             Hypothesis h2f = h1.finalPredecessor(h);
 
             // Find the index positions of the initial and final predecessors in the current list of hypotheses
-            int h2iIndex = findInitial(current, h2i);
-            int h2fIndex = findFinal(current, h2iIndex, h2f);
+            int h2iIndex = findInitial(current, h2i, hIndex);
+            int h2fIndex = findFinal(current, h2iIndex, h2f, hIndex);
 
             // Counter to track the number of hypotheses in 'current' that are at a Hamming distance of 1 from the new hypothesis
             int counter = 0;
 
             // If both initial and final predecessors are found in the current list
             if (h2iIndex > -1 && h2fIndex > -1) {
-                // Iterate through the range of hypotheses from the initial to the final predecessor
+                // Iterate through the range of hypotheses from the initial to the final predecessor to count the "fathers"
                 for (int j = h2iIndex; j <= h2fIndex; j++) {
-                    // If the Hamming distance between the current hypothesis and the new hypothesis is 1
+                    // If the Hamming distance between the current hypothesis and the new hypothesis is 1 it's a father
                     if (current.get(j).hammingDist(h1) == 1) {
                         // Propagate the values from the current hypothesis to the new hypothesis
                         current.get(j).propagate(h1);
@@ -203,7 +209,7 @@ public class Solver
                 }
             }
 
-            // If the counter equals the cardinality of the current hypothesis, add the new hypothesis to the children list
+            // If the counter equals the cardinality of the parent, add the new hypothesis to the children list
             if (counter == h.cardinality())
                 children.add(h1);
 
@@ -226,7 +232,6 @@ public class Solver
         // Check if the initial predecessor index is valid
         if (h2iIndex != -1) {
             // Get the size of the current list of hypotheses
-            int currentSize = current.size();
             // Iterate through the list starting from the initial predecessor index
             for (int i = h2iIndex; i < currentSize; i++) {
                 // If the current hypothesis equals the final predecessor hypothesis, return its index
@@ -247,7 +252,13 @@ public class Solver
      */
     private int findInitial(List<Hypothesis> current, Hypothesis h2i) {
         // Return the index of the initial predecessor hypothesis in the current list, or -1 if not found
-        return current.indexOf(h2i);
+        for (int i = 0; i < hIndex; i++)
+        {
+            if (current.get(i).equals(h2i))
+                return i;
+        }
+
+        return -1;
     }
 
 

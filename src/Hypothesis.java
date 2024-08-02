@@ -212,10 +212,4 @@ public class Hypothesis {
         return binaryRep.equals(that.binaryRep);
     }
 
-    @Override
-    public int hashCode() {
-        int result = binaryRep.hashCode();
-        result = 31 * result + (hitVector != null ? hitVector.hashCode() : 0);
-        return result;
-    }
 }

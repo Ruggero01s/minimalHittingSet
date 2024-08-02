@@ -26,9 +26,9 @@ public class Writer
 
     private void writeSummary(Instance instance, boolean interrupted) throws IOException {
         if (interrupted) {
-            writer.write(";;; The program was interrupted either by the user or by time limit.");
+            writer.write(";;; The program was interrupted prematurely.");
             writer.newLine();
-            writer.write(";;; The program was exploring the level N: "+ (instance.getPerLevelHypotheses().size() - 1));
+            writer.write(";;; The program was exploring the level: "+ (instance.getPerLevelHypotheses().size() - 1));
             writer.newLine();
         }
         if (instance instanceof Permutation permutation) {
