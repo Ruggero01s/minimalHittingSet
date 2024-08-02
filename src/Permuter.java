@@ -95,37 +95,33 @@ public class Permuter {
 
         // Initialize new columns and rows
         List<Integer> newColumns = new ArrayList<>();
-        for (int i = 0; i < instance.getInputMatrix().size(); i++) {
+        for (int i = 0; i < instance.getInputMatrix().size(); i++)
             newColumns.add(i);
-        }
 
         List<Integer> newRows = new ArrayList<>();
-        for (int i = 0; i < instance.getInputMatrix().get(0).size(); i++) {  // Corrected to use get(0) instead of getFirst()
+        for (int i = 0; i < instance.getInputMatrix().getFirst().size(); i++)
             newRows.add(i);
-        }
+
 
         // Return a new permutation without shuffling if both rows and columns are not to be permuted
-        if (!permuteRows && !permuteCols) {
+        if (!permuteRows && !permuteCols)
             return new Permutation(new Instance(instance.instanceName, instance.getInputMatrix()), basePath + fileName, newColumns, newRows);
-        }
 
         // Shuffle columns if permuteCols is true
-        if (permuteCols) {
+        if (permuteCols)
             Collections.shuffle(newColumns, rand);
-        }
 
         // Shuffle rows if permuteRows is true
-        if (permuteRows) {
+        if (permuteRows)
             Collections.shuffle(newRows, rand);
-        }
 
         // Create a new permuted input matrix
         List<List<Integer>> newN = new ArrayList<>();
-        for (Integer newColumn : newColumns) {
+        for (Integer newColumn : newColumns)
+        {
             List<Integer> newNRow = new ArrayList<>();
-            for (Integer newRow : newRows) {
+            for (Integer newRow : newRows)
                 newNRow.add(instance.getInputMatrix().get(newColumn).get(newRow));
-            }
             newN.add(newNRow);
         }
 

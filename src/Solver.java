@@ -226,14 +226,18 @@ public class Solver{
      * @param current the list of current hypotheses
      * @param h2iIndex the index of the initial predecessor hypothesis
      * @param h2f the final predecessor hypothesis to find
+     * @param hIndex the index in current of h
      * @return the index of the final predecessor hypothesis if found, otherwise -1
      */
-    private int findFinal(List<Hypothesis> current, int h2iIndex, Hypothesis h2f) {
+    private int findFinal(List<Hypothesis> current, int h2iIndex, Hypothesis h2f, int hIndex)
+    {
         // Check if the initial predecessor index is valid
-        if (h2iIndex != -1) {
+        if (h2iIndex != -1)
+        {
             // Get the size of the current list of hypotheses
             // Iterate through the list starting from the initial predecessor index
-            for (int i = h2iIndex; i < currentSize; i++) {
+            for (int i = h2iIndex; i < hIndex; i++)
+            {
                 // If the current hypothesis equals the final predecessor hypothesis, return its index
                 if (current.get(i).equals(h2f))
                     return i;
@@ -248,9 +252,11 @@ public class Solver{
      *
      * @param current the list of current hypotheses
      * @param h2i the initial predecessor hypothesis to find
+     * @param hIndex the index in current of h
      * @return the index of the initial predecessor hypothesis if found, otherwise -1
      */
-    private int findInitial(List<Hypothesis> current, Hypothesis h2i) {
+    private int findInitial(List<Hypothesis> current, Hypothesis h2i, int hIndex)
+    {
         // Return the index of the initial predecessor hypothesis in the current list, or -1 if not found
         for (int i = 0; i < hIndex; i++)
         {
