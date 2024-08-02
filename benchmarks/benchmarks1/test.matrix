@@ -1,5 +1,8 @@
-;;; Map 1(a) 2(b) 3(c) 4(d)
-1 0 0 0 -
+;;; Host = zelda6, Version = 26, date = 2010-01-13-10-16-19
+;;; Source = /tilde/dekleer/projects/GDE/DXC/dxc-09-syn-benchmark-1.1/c2670/c2670.005.scn
+;;; Error status nil
+;;; Injected fault:1139(z1082)
+;;; Map 1(o77) 2(o78) 3(o79) 4(z1)
+1 0 1 0 -
 0 1 0 0 -
-0 0 1 0 -
-0 0 0 1 -
+
