@@ -6,7 +6,9 @@ public class Initializer {
     private String fileName;
     private String basePath;
     private Instance instance;
+    private Solver solver;
     boolean finished = false;
+    boolean partial = false;
     Writer writer;
     long startTime;
     long endTime;
@@ -43,9 +45,9 @@ public class Initializer {
 
         // initializing the two threads
         //computation thread
+        solver = new Solver();
         Thread computationThread = new Thread(() -> {
             try {
-                Solver solver = new Solver();
                 solver.solve(instance);
             }
             catch (Exception e)
@@ -54,6 +56,7 @@ public class Initializer {
                 System.out.println("Printing partial results to file");
                 try
                 {
+                    partial = true;
                     writer.writeOut(instance,true);
                 }
                 catch (IOException ex)
@@ -77,7 +80,6 @@ public class Initializer {
         inputThread.start();
         computationThread.start();
 
-
         // Wait for computation to finish
         while (computationThread.isAlive()) {
             continue;
@@ -85,11 +87,13 @@ public class Initializer {
         endTime = System.nanoTime();
         instance.setExecutionTime((double) (endTime - startTime) / NANO_TO_MILLI_RATE);
 
-        // Write output
-        try {
-            writer.writeOut(instance, false);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (!partial) {
+            // Write output
+            try {
+                writer.writeOut(instance, false);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         // To stop the other thread
         finished = true;
@@ -103,21 +107,16 @@ public class Initializer {
             long time = (endTime - startTime);
             if (timeLimit){
                 if (time / NANO_TO_SECONDS_RATE >= MAX_TIME_IN_SECONDS) {
-                    instance.setExecutionTime((double) time / NANO_TO_MILLI_RATE);
+                    solver.interrupt();
                     System.out.println("Max time reached, stopping computation...");
-                    writer.writeOut(instance, true);
-                    System.exit(130);
                     break;
                 }
             }
             if (reader.ready()) {
                 int input = reader.read();
                 if (input == 'q') {
-                    computationThread.interrupt();
-                    instance.setExecutionTime((double) time / NANO_TO_MILLI_RATE);
+                    solver.interrupt();
                     System.out.println("Stopping computation...");
-                    writer.writeOut(instance, true);
-                    System.exit(130);
                     break;
                 }
             }

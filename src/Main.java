@@ -3,10 +3,10 @@ import java.io.File;
 public class Main
 {
 
-	private static final String basePath="benchmarks/currentBenchmarks";
+	private static final String basePath="currentBenchmarks";
 
 	// -1 for no time limit
-	private static final long MAX_TIME_IN_SECONDS=-1;
+	private static final long MAX_TIME_IN_SECONDS=300;
 
 	public static void main(String[] args)
 	{
@@ -25,6 +25,7 @@ public class Main
 				{
 					Initializer initializer=new Initializer(basePath+"/", file.getName(), MAX_TIME_IN_SECONDS);
 					initializer.start();
+					System.gc();
 				}
 			}
 		}

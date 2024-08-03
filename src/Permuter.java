@@ -13,10 +13,10 @@ public class Permuter {
     private static boolean permuteCols = true;
 
     private static String basePath = "benchmarks/benchmarks1/";
-    private static String fileName = "74L85.020.matrix";
+    private static String fileName = "74L85.025.matrix";
     private static Instance instanceToPermute;
     private static List<Permutation> permutations = new ArrayList<>();
-    private static final int numberOfPermutations = 20;
+    private static final int numberOfPermutations = 100;
     private static Writer writer;
 
     /**
