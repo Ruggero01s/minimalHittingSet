@@ -9,8 +9,8 @@ import java.util.Random;
  * It generates multiple permutations of the input instance and writes them to files.
  */
 public class Permuter {
-    private static boolean permuteRows = true;
-    private static boolean permuteCols = true;
+    private static boolean permuteRows = false;
+    private static boolean permuteCols = false;
 
     private static String basePath = "benchmarks/benchmarks1/";
     private static String fileName = "74L85.025.matrix";

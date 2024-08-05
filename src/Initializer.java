@@ -77,6 +77,7 @@ public class Initializer {
             }
         });
 
+        System.out.println("\nProgram is computing instance \"" + instance.getInstanceName()+"\"");
         inputThread.start();
         computationThread.start();
 
@@ -101,7 +102,6 @@ public class Initializer {
 
     private void checkForKeyPressAndTimeLimit(Thread computationThread) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        System.out.println("\nProgram is computing instance \"" + instance.getInstanceName() + "\"...\nPress 'q' then 'Enter' to stop the program.");
         while (!finished) {
             endTime = System.nanoTime();
             long time = (endTime - startTime);
@@ -117,6 +117,10 @@ public class Initializer {
                 if (input == 'q') {
                     solver.interrupt();
                     System.out.println("Stopping computation...");
+                    while (computationThread.isAlive()) {
+                        continue;
+                    }
+                    System.exit(130);
                     break;
                 }
             }
