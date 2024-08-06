@@ -19,7 +19,7 @@ public class Reader {
         List<Integer> newRows = new ArrayList<>();
         while ((line = br.readLine()) != null) {
             if (line.contains(";;;")) {
-                continue;
+                //continue;
             } else if (line.contains("Cols")) {
                 newCols = parsePermCols(line);
             } else if (line.contains("Rows")) {

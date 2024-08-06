@@ -47,7 +47,7 @@ public class Writer
         writer.newLine();
         writer.write(";;; Number of explored Hypotheses: " + instance.getExploredHypotheses());
         writer.newLine();
-        writer.write(";;; Number of generated Hypotheses per level: " + instance.perLevelHypothesesToString(interrupted));
+        writer.write(";;; Number of generated Hypotheses per level: " + instance.perLevelHypothesesToString());
         writer.newLine();
         writer.write(";;; Execution time: " + instance.getExecutionTime() + " ms");
         writer.newLine();

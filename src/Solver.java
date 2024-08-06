@@ -1,6 +1,5 @@
 import java.math.BigInteger;
 import java.util.*;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -10,7 +9,7 @@ public class Solver {
 
     private boolean isInterrupted = false;
 
-    public void solve(Instance instance) {
+    public void solve(Instance instance, int numThreads) {
         long startTime = System.nanoTime();
 
         // Generate M'
@@ -65,11 +64,8 @@ public class Solver {
                     Hypothesis hp = current.getFirst();
 
                     if (!hp.equals(h))
-                        // Generate h children and add them to next keeping the list sorted
-                        //todo scegliere sorting
-                        //merge(next, generateChildren(instance, current, h));
-                        // Adding all the generated children to next without sorting it.
-                        next.addAll(generateChildren(instance, current, h, i));
+                        // Add all the generated children to next without sorting it.
+                        next.addAll(generateChildren(instance, current, h, i, numThreads));
                 }
 
                 // Sampling for spatial performance benchmark
@@ -118,6 +114,7 @@ public class Solver {
     }
 
     /**
+     * old method
      * Merges a list of hypotheses into another list in sorted order.
      * This method assumes that the input list {@param hypotheses} is sorted according
      * to the criteria defined by the Hypothesis.isGreater(Hypothesis) method.
@@ -172,14 +169,14 @@ public class Solver {
      * @param h        the hypothesis to generate children from
      * @return a list of child hypotheses generated from the given hypothesis
      */
-    private List<Hypothesis> generateChildren(Instance instance, List<Hypothesis> current, Hypothesis h, int hIndex) {
+    private List<Hypothesis> generateChildren(Instance instance, List<Hypothesis> current, Hypothesis h, int hIndex, int numThreads) {
         // List to store the generated child hypotheses
         Vector<Hypothesis> children = new Vector<>();
 
         // Find the index of the first occurrence of '1' in the binary representation of the hypothesis
         int firstIndexOf1InH = h.getBinaryRep().indexOf(1);
         int parentCardinality = h.cardinality();
-        ExecutorService executorService = Executors.newFixedThreadPool(14);
+        ExecutorService executorService = Executors.newFixedThreadPool(numThreads);
         // Iterate through each bit position before the first '1' in the binary representation
         for (int i = 0; i < firstIndexOf1InH; i++) {
             int finalI = i;

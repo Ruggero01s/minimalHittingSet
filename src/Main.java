@@ -8,6 +8,9 @@ public class Main
 	// -1 for no time limit
 	private static final long MAX_TIME_IN_SECONDS=300;
 
+	// threads to be used in generateChildren
+	private static final int NUM_THREADS=14;
+
 	public static void main(String[] args)
 	{
 		System.out.println("\nPress 'q' then 'Enter' to stop the program.");
@@ -24,7 +27,7 @@ public class Main
 				// For each file in the directory start  a new initializer
 				for (File file : filesList)
 				{
-					Initializer initializer=new Initializer(basePath+"/", file.getName(), MAX_TIME_IN_SECONDS);
+					Initializer initializer = new Initializer(basePath+"/", file.getName(), MAX_TIME_IN_SECONDS, NUM_THREADS);
 					initializer.start();
 					System.gc();
 				}
@@ -33,6 +36,3 @@ public class Main
 		System.exit(0);
 	}
 }
-
-// todo dump per crash
-// todo fare programmino per le performance spaziali e temporali, ruba le righe della matrice e delle velocità con un parserino e fa un grafico

@@ -137,10 +137,9 @@ public class Instance {
     /**
      * Converts the per-level hypotheses to a string representation.
      *
-     * @param interrupted indicates whether the process was interrupted
      * @return the string representation of the per-level hypotheses
      */
-    public String perLevelHypothesesToString(boolean interrupted) {
+    public String perLevelHypothesesToString() {
         StringBuilder perLevelHypotesisString = new StringBuilder();
         for (int i = 0; i < perLevelHypothesis.size(); i++) {
             perLevelHypotesisString.append(i).append(" -> ").append(perLevelHypothesis.get(i)).append(" || ");

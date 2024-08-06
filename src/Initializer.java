@@ -7,6 +7,7 @@ public class Initializer {
     private String basePath;
     private Instance instance;
     private Solver solver;
+    private int numThreads;
     boolean finished = false;
     boolean partial = false;
     Writer writer;
@@ -19,10 +20,11 @@ public class Initializer {
     public static final double NANO_TO_SECONDS_RATE = 1e9;
 
 
-    public Initializer(String basePath, String fileName, long MAX_TIME) {
+    public Initializer(String basePath, String fileName, long MAX_TIME, int numThreads) {
         this.basePath = basePath;
         this.fileName = fileName;
         writer = new Writer(fileName);
+        this.numThreads = numThreads;
         if (MAX_TIME == -1)
             timeLimit = false;
         else {
@@ -48,7 +50,7 @@ public class Initializer {
         solver = new Solver();
         Thread computationThread = new Thread(() -> {
             try {
-                solver.solve(instance);
+                solver.solve(instance, numThreads);
             }
             catch (Exception e)
             {
@@ -83,7 +85,7 @@ public class Initializer {
 
         // Wait for computation to finish
         while (computationThread.isAlive()) {
-            continue;
+            //continue;
         }
         endTime = System.nanoTime();
         instance.setExecutionTime((double) (endTime - startTime) / NANO_TO_MILLI_RATE);
@@ -118,7 +120,7 @@ public class Initializer {
                     solver.interrupt();
                     System.out.println("Stopping computation...");
                     while (computationThread.isAlive()) {
-                        continue;
+                        //continue;
                     }
                     System.exit(130);
                     break;
