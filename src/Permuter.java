@@ -20,17 +20,6 @@ public class Permuter {
     private static Writer writer;
 
     /**
-     * Sets up the permutation flags for rows and columns.
-     *
-     * @param permRows boolean indicating whether rows should be permuted
-     * @param permCols boolean indicating whether columns should be permuted
-     */
-    public static void setUp(boolean permRows, boolean permCols) {
-        permuteRows = permRows;
-        permuteCols = permCols;
-    }
-
-    /**
      * The main method to execute the permutation process.
      *
      * @param args command line arguments (not used)
