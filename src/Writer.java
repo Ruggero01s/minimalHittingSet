@@ -6,6 +6,7 @@ public class Writer
 {
     private static final String resultPath = "results/";
     private static final String permutationsPath = "permutations/";
+    private static final String errorPath = "permutations/error.log";
     private BufferedWriter writer;
 
     public Writer(String name) {
@@ -63,9 +64,10 @@ public class Writer
         writer.write(instance.solutionToString());
     }
 
-    public void write(String message) throws IOException {
-        writer.write(";;; ErrorMessage: " + message);
-        writer.flush();
+    public void writeError(String message) throws IOException {
+        BufferedWriter errorWriter = new BufferedWriter(new FileWriter(errorPath));
+        errorWriter.write(";;; ErrorMessage: " + message);
+        errorWriter.flush();
     }
 
     public void writePermutation(Permutation permutation) throws IOException {

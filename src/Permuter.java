@@ -12,11 +12,11 @@ public class Permuter {
     private static boolean permuteRows = true;
     private static boolean permuteCols = true;
 
-    private static String basePath = "currentBenchmarks/";
-    private static String fileName = "test.matrix";
+    private static String basePath = "benchmarks/benchmarks1/";
+    private static String fileName = "74L85.025.matrix";
     private static Instance instanceToPermute;
     private static List<Permutation> permutations = new ArrayList<>();
-    private static final int numberOfPermutations = 1;
+    private static final int numberOfPermutations = 10;
     private static Writer writer;
 
     /**
@@ -32,10 +32,11 @@ public class Permuter {
         } catch (IOException e) {
             try {
                 // Log an error message if reading the file fails
-                writer.write(";;; Error reading file (" + basePath + fileName + "): " + e.getMessage());
+                writer.writeError("Error reading file (" + basePath + fileName + "): " + e.getMessage());
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
+            System.exit(1);
         }
 
         // Generate the specified number of permutations

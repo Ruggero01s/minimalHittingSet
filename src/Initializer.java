@@ -38,9 +38,10 @@ public class Initializer {
             instance = Reader.readInstance(basePath, fileName);
         } catch (IOException e) {
             try {
-                writer.write(";;; Error reading file (" + basePath + fileName + "): " + e.getMessage());
+                writer.writeError(";;; Error reading file (" + basePath + fileName + "): " + e.getMessage());
             } catch (IOException ex) {
                 e.printStackTrace();
+                System.exit(1);
             }
         }
 
