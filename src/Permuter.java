@@ -12,11 +12,11 @@ public class Permuter {
     private static boolean permuteRows = false;
     private static boolean permuteCols = false;
 
-    private static String basePath = "benchmarks/benchmarks1/";
-    private static String fileName = "74L85.025.matrix";
+    private static String basePath = "currentBenchmarks/";
+    private static String fileName = "test.matrix";
     private static Instance instanceToPermute;
     private static List<Permutation> permutations = new ArrayList<>();
-    private static final int numberOfPermutations = 100;
+    private static final int numberOfPermutations = 1;
     private static Writer writer;
 
     /**

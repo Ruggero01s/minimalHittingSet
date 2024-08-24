@@ -1,0 +1,7 @@
+;;; Permutation of: ''currentBenchmarks/test.matrix''
+;;; New order of columns indexes: 
+Cols: [0, 1, 2, 3]
+;;; New order of rows indexes: 
+Rows: [0, 1]
+1 0 1 0  -
+0 1 0 0  -
